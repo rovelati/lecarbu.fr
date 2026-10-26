@@ -102,13 +102,35 @@ const canonicalURL = canonical.endsWith('/') ? canonical : `${canonical}/`;
   {schema && (
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   )}
+
+  <!-- Theme Initializer & Global Toggle (Solar / Dark Mode) -->
+  <script is:inline>
+    (function() {
+      const storedTheme = localStorage.getItem('lc_theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (storedTheme === 'light' || (!storedTheme && !prefersDark)) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
+    window.toggleTheme = function() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('lc_theme', isDark ? 'dark' : 'light');
+      window.dispatchEvent(new CustomEvent('lc_theme_changed', { detail: { isDark } }));
+    };
+  </script>
 </head>
-<body class="min-h-screen flex flex-col bg-zinc-950 text-zinc-100 antialiased">
+<body class="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased transition-colors duration-150">
   <!-- French Tricolor Thin Accent Line -->
   <div class="french-tricolor-line w-full"></div>
 
   <!-- Header -->
-  <header class="sticky top-0 z-40 border-b border-zinc-800/80 bg-zinc-950/90 backdrop-blur-md">
+  <header class="sticky top-0 z-40 border-b border-zinc-200 dark:border-zinc-800/80 bg-white/95 dark:bg-zinc-950/90 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       <!-- Logo with French Flag Accents -->
       <a href="/" class="flex items-center gap-2.5 group">
@@ -121,15 +143,15 @@ const canonicalURL = canonical.endsWith('/') ? canonical : `${canonical}/`;
         </div>
         <div class="flex flex-col">
           <div class="flex items-center gap-1.5">
-            <span class="text-xl font-black tracking-tight text-white">
-              Le<span class="text-blue-500">Carbu</span><span class="text-zinc-500 text-sm font-semibold">.fr</span>
+            <span class="text-xl font-black tracking-tight text-zinc-900 dark:text-white">
+              Le<span class="text-blue-500">Carbu</span><span class="text-zinc-400 dark:text-zinc-500 text-sm font-semibold">.fr</span>
             </span>
             <!-- French mini-pill -->
-            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-950/80 text-blue-300 border border-blue-800/60">
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800/60">
               🇫🇷 DIRECT
             </span>
           </div>
-          <span class="text-[9px] text-zinc-400 font-semibold tracking-wider uppercase -mt-1">
+          <span class="text-[9px] text-zinc-500 dark:text-zinc-400 font-semibold tracking-wider uppercase -mt-1">
             Prix des Carburants en Temps Réel
           </span>
         </div>
@@ -137,27 +159,46 @@ const canonicalURL = canonical.endsWith('/') ? canonical : `${canonical}/`;
 
       <!-- Desktop Navigation -->
       <nav class="hidden md:flex items-center gap-5 text-sm font-medium">
-        <a href="/prix-carburant/gazole/" class="text-zinc-300 hover:text-blue-400 transition-colors">Gazole</a>
-        <a href="/prix-carburant/essence-e10/" class="text-zinc-300 hover:text-blue-400 transition-colors">SP95-E10</a>
-        <a href="/prix-carburant/sp98/" class="text-zinc-300 hover:text-blue-400 transition-colors">SP98</a>
-        <a href="/prix-carburant/e85/" class="text-zinc-300 hover:text-emerald-400 transition-colors font-semibold">E85 Bioéthanol</a>
-        <a href="/supermarche-carburant/" class="text-zinc-300 hover:text-blue-400 transition-colors">Supermarchés</a>
+        <a href="/prix-carburant/gazole/" class="text-zinc-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Gazole</a>
+        <a href="/prix-carburant/essence-e10/" class="text-zinc-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">SP95-E10</a>
+        <a href="/prix-carburant/sp98/" class="text-zinc-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">SP98</a>
+        <a href="/prix-carburant/e85/" class="text-emerald-700 dark:text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors font-semibold">E85 Bioéthanol</a>
+        <a href="/supermarche-carburant/" class="text-zinc-600 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Supermarchés</a>
         <a href="/carburant-moins-cher/" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-md shadow-blue-500/20 text-xs">
           Le Moins Cher
         </a>
       </nav>
 
-      <!-- Search Trigger / Quick Action -->
-      <div class="flex items-center gap-3">
+      <!-- Search Trigger / Quick Action & Solar Mode Toggle -->
+      <div class="flex items-center gap-2.5">
         <a
           href="/#search-container"
-          class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs text-zinc-400 hover:text-white hover:border-zinc-700 transition-colors"
+          class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors"
         >
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <span>Rechercher une ville ou code postal...</span>
         </a>
+
+        <!-- Solar / Dark Mode Button -->
+        <button
+          id="theme-toggle"
+          type="button"
+          onclick="window.toggleTheme()"
+          aria-label="Mode Solaire / Sombre"
+          title="Changer de thème (Mode Solaire / Sombre)"
+          class="p-2 rounded-xl text-zinc-600 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-800 transition-colors cursor-pointer"
+        >
+          <!-- Sun icon (shown in dark mode -> click to activate Solar mode) -->
+          <svg id="sun-icon" class="w-4 h-4 hidden dark:block text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+          </svg>
+          <!-- Moon icon (shown in light mode -> click to activate Dark mode) -->
+          <svg id="moon-icon" class="w-4 h-4 block dark:hidden text-zinc-700" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>

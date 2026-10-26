@@ -1,12 +1,15 @@
 @import "tailwindcss";
 
 @layer base {
-  html {
+  html.dark {
     color-scheme: dark;
-  }
-  body {
     background-color: #09090b;
     color: #f4f4f5;
+  }
+  html:not(.dark) {
+    color-scheme: light;
+    background-color: #f8fafc;
+    color: #0f172a;
   }
 }
 
@@ -16,29 +19,79 @@
   height: 2px;
 }
 
-/* Interactive Map Marker Popups */
+/* Custom Marker Leaflet Wrapper */
+.custom-map-pin {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Interactive Map Marker Price Pins */
 .custom-price-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   background: #18181b;
-  color: #fff;
+  color: #ffffff;
   border: 1px solid #3f3f46;
-  border-radius: 8px;
-  padding: 2px 6px;
-  font-weight: 700;
+  border-radius: 9999px;
+  padding: 3px 8px;
+  font-weight: 800;
   font-size: 11px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  letter-spacing: -0.01em;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
   white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.15s ease;
 }
+.custom-price-pin:hover {
+  transform: scale(1.08);
+}
+
+/* Solar Mode Pin */
+html:not(.dark) .custom-price-pin {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* PROMINENT CHEAPEST PIN - GREEN GLOW & STAR */
 .custom-price-pin.cheapest {
-  background: #16a34a;
-  color: #fff;
-  border-color: #22c55e;
+  background: #16a34a !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  font-weight: 900 !important;
+  font-size: 11.5px !important;
+  padding: 4px 10px !important;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4), 0 8px 16px rgba(0,0,0,0.5) !important;
+  z-index: 1000 !important;
+  animation: pulse-green 2s infinite;
 }
 
-/* Dark Mode Leaflet Map Tiles (100% Free OpenStreetMap without any API Key watermark) */
-.leaflet-tile-pane {
-  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
+@keyframes pulse-green {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7), 0 6px 12px rgba(0,0,0,0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0), 0 6px 12px rgba(0,0,0,0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0), 0 6px 12px rgba(0,0,0,0.4);
+  }
 }
 
+/* Leaflet Map Tiles */
+/* Solar Mode: 100% crisp, natural, bright OpenStreetMap */
+html:not(.dark) .leaflet-tile-pane {
+  filter: none !important;
+}
+
+/* Dark Mode: Clean slate dark map without murky green (saturate 0.25 prevents swamp green) */
+html.dark .leaflet-tile-pane {
+  filter: brightness(0.7) invert(1) contrast(2) hue-rotate(200deg) saturate(0.25);
+}
+
+/* Leaflet Popups */
 .leaflet-popup-content-wrapper {
   background: #18181b !important;
   color: #f4f4f5 !important;
@@ -48,6 +101,17 @@
   padding: 4px !important;
 }
 
+html:not(.dark) .leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+}
+
 .leaflet-popup-tip {
   background: #18181b !important;
+}
+
+html:not(.dark) .leaflet-popup-tip {
+  background: #ffffff !important;
 }

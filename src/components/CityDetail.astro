@@ -209,19 +209,58 @@ const regionDepts = (deptData as any[])
   <!-- Ad Slot Top -->
   <AdSlot />
 
+  <!-- Hero Alert: Station la Moins Chère (Hydrated via JS) -->
+  <div id="cheapest-hero-card" class="mb-6 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-zinc-900/90 to-zinc-900 border border-emerald-500/40 shadow-lg shadow-emerald-500/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="flex items-center gap-3.5">
+      <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-2xl flex-shrink-0">
+        🏆
+      </div>
+      <div>
+        <div class="text-[11px] font-black uppercase tracking-wider text-emerald-400 flex items-center gap-2">
+          <span>Meilleur Tarif Détecté</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        </div>
+        <div id="cheapest-hero-title" class="text-base sm:text-lg font-bold text-white">
+          Recherche de la station la moins chère à {city.name}...
+        </div>
+        <div id="cheapest-hero-sub" class="text-xs text-zinc-400">
+          Mise à jour en temps réel selon les données officielles du Ministère
+        </div>
+      </div>
+    </div>
+    <a
+      id="cheapest-hero-btn"
+      href="#stations-list"
+      class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-xs transition-all whitespace-nowrap shadow-md text-center"
+    >
+      Voir les offres &rarr;
+    </a>
+  </div>
+
   <!-- Interactive Map Section -->
   <section class="mb-10">
-    <div class="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl">
-      <div class="p-4 border-b border-zinc-800/80 bg-zinc-900/90 flex items-center justify-between">
+    <div class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden shadow-2xl">
+      <div class="p-4 border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-900/90 flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></span>
-          <span class="text-xs font-bold text-white uppercase tracking-wider">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-xs font-bold text-zinc-900 dark:text-white uppercase tracking-wider">
             Carte Interactive des Stations — {city.name}
           </span>
         </div>
-        <span class="text-xs text-zinc-400">Cliquez sur un repère pour voir les tarifs</span>
+        <span class="text-xs text-zinc-500 dark:text-zinc-400">Cliquez sur un repère pour voir les tarifs</span>
       </div>
       <div id="city-map" class="w-full h-80 sm:h-96 z-10" data-lat={city.lat} data-lng={city.lng} data-city={city.slug}></div>
+      <div class="p-3 bg-zinc-100 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1 font-bold text-emerald-600 dark:text-emerald-400">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+            Vert avec étoile ★ = Station la moins chère
+          </span>
+          <span>•</span>
+          <span>Gris/Noir = Autres stations</span>
+        </div>
+        <span class="text-[11px] text-zinc-500">Source : Prix officiels des carburants (Ministère de l'Économie)</span>
+      </div>
     </div>
   </section>
 
@@ -557,6 +596,44 @@ const regionDepts = (deptData as any[])
 
       countBadge.textContent = `${nearby.length} station${nearby.length > 1 ? 's' : ''} à proximité`;
 
+      // Hydrate Top Hero Cheapest Alert Card
+      const heroTitle = document.getElementById('cheapest-hero-title');
+      const heroSub = document.getElementById('cheapest-hero-sub');
+      const heroBtn = document.getElementById('cheapest-hero-btn');
+
+      if (nearby.length > 0 && heroTitle && heroSub && heroBtn) {
+        const topStation = nearby[0];
+        let bestPriceVal = null;
+        let bestFuelName = '';
+
+        if (targetFuel === 'gazole' && topStation.p.g) {
+          bestPriceVal = topStation.p.g;
+          bestFuelName = 'Gazole';
+        } else if (targetFuel === 'e10' && topStation.p.e) {
+          bestPriceVal = topStation.p.e;
+          bestFuelName = 'SP95-E10';
+        } else if (targetFuel === 'sp98' && topStation.p.s) {
+          bestPriceVal = topStation.p.s;
+          bestFuelName = 'SP98';
+        } else if (targetFuel === 'e85' && topStation.p.e85) {
+          bestPriceVal = topStation.p.e85;
+          bestFuelName = 'E85';
+        } else {
+          // Default: pick best available price
+          if (topStation.p.e) { bestPriceVal = topStation.p.e; bestFuelName = 'SP95-E10'; }
+          else if (topStation.p.g) { bestPriceVal = topStation.p.g; bestFuelName = 'Gazole'; }
+        }
+
+        if (bestPriceVal) {
+          heroTitle.innerHTML = `<span class="text-white">${topStation.n}</span> — <span class="text-emerald-400 font-black text-xl sm:text-2xl">${bestPriceVal.toFixed(3)} €/L</span> <span class="text-xs text-zinc-300 font-bold px-2 py-0.5 rounded bg-emerald-500/20">★ ${bestFuelName}</span>`;
+          heroSub.innerHTML = `📍 ${topStation.a}, ${topStation.cp} ${topStation.v} • à <strong>${topStation.dist.toFixed(1)} km</strong> du centre`;
+          heroBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${topStation.lt},${topStation.lg}`;
+          heroBtn.target = '_blank';
+          heroBtn.rel = 'noopener';
+          heroBtn.innerHTML = `Y aller en GPS &rarr;`;
+        }
+      }
+
       // Render Forecourt Cards
       listContainer.innerHTML = nearby.map((s, idx) => {
         const isCheapest = idx === 0;
@@ -566,49 +643,49 @@ const regionDepts = (deptData as any[])
         const e85Price = s.p.e85 ? `${s.p.e85.toFixed(3)} €` : null;
 
         return `
-          <article class="p-5 rounded-2xl border ${isCheapest ? 'border-emerald-500/60 bg-gradient-to-b from-emerald-950/20 to-zinc-900/90 shadow-lg shadow-emerald-500/10' : 'border-zinc-800 bg-zinc-900/70'} flex flex-col justify-between transition-all hover:border-zinc-700">
+          <article class="p-5 rounded-2xl border ${isCheapest ? 'border-emerald-500/80 bg-gradient-to-b from-emerald-950/20 via-zinc-900/90 to-zinc-900 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/30' : 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/70 shadow-sm'} flex flex-col justify-between transition-all hover:border-zinc-400 dark:hover:border-zinc-700">
             <div>
               <div class="flex items-start justify-between gap-3 mb-2">
-                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
                   ${s.b.toUpperCase()}
                 </span>
-                ${isCheapest ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-wider bg-emerald-500 text-black shadow-sm">LE MOINS CHER</span>' : `<span class="text-xs text-zinc-400 font-medium">${s.dist.toFixed(1)} km</span>`}
+                ${isCheapest ? '<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[11px] font-black uppercase tracking-wider bg-emerald-500 text-black shadow-sm">★ LE MOINS CHER</span>' : `<span class="text-xs text-zinc-500 dark:text-zinc-400 font-medium">à ${s.dist.toFixed(1)} km</span>`}
               </div>
-              <h3 class="text-base font-bold text-white leading-snug mb-1">${s.n}</h3>
-              <p class="text-xs text-zinc-400 mb-4">${s.a}, ${s.cp} ${s.v}</p>
+              <h3 class="text-base font-bold text-zinc-900 dark:text-white leading-snug mb-1">${s.n}</h3>
+              <p class="text-xs text-zinc-500 dark:text-zinc-400 mb-4">${s.a}, ${s.cp} ${s.v}</p>
 
               <!-- Fuel Prices Grid -->
               <div class="grid grid-cols-3 gap-2 mb-4">
-                <div class="p-2 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-center">
-                  <div class="text-[9px] uppercase font-bold text-zinc-400">Gazole</div>
-                  <div class="text-sm font-black ${s.p.g ? (isCheapest ? 'text-emerald-400' : 'text-zinc-100') : 'text-zinc-600'}">${gPrice}</div>
+                <div class="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800/80 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-500 dark:text-zinc-400">Gazole</div>
+                  <div class="text-sm font-black ${s.p.g ? (isCheapest ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-900 dark:text-zinc-100') : 'text-zinc-400 dark:text-zinc-600'}">${gPrice}</div>
                 </div>
-                <div class="p-2 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-center">
-                  <div class="text-[9px] uppercase font-bold text-zinc-400">SP95-E10</div>
-                  <div class="text-sm font-black ${s.p.e ? (isCheapest ? 'text-emerald-400' : 'text-zinc-100') : 'text-zinc-600'}">${ePrice}</div>
+                <div class="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800/80 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-500 dark:text-zinc-400">SP95-E10</div>
+                  <div class="text-sm font-black ${s.p.e ? (isCheapest ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-900 dark:text-zinc-100') : 'text-zinc-400 dark:text-zinc-600'}">${ePrice}</div>
                 </div>
-                <div class="p-2 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-center">
-                  <div class="text-[9px] uppercase font-bold text-zinc-400">SP98</div>
-                  <div class="text-sm font-black ${s.p.s ? 'text-blue-400' : 'text-zinc-600'}">${sPrice}</div>
+                <div class="p-2 rounded-xl bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800/80 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-500 dark:text-zinc-400">SP98</div>
+                  <div class="text-sm font-black ${s.p.s ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400 dark:text-zinc-600'}">${sPrice}</div>
                 </div>
               </div>
               ${e85Price ? `
-                <div class="mb-4 p-1.5 rounded-lg bg-emerald-950/40 border border-emerald-900/60 flex items-center justify-between text-xs px-3">
-                  <span class="text-emerald-300 font-semibold text-[11px]">Superéthanol E85</span>
-                  <span class="font-black text-emerald-400">${e85Price}</span>
+                <div class="mb-4 p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60 flex items-center justify-between text-xs px-3">
+                  <span class="text-emerald-700 dark:text-emerald-300 font-semibold text-[11px]">Superéthanol E85</span>
+                  <span class="font-black text-emerald-600 dark:text-emerald-400">${e85Price}</span>
                 </div>
               ` : ''}
             </div>
 
-            <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between gap-3 text-xs">
-              <span class="text-[11px] text-zinc-400">
+            <div class="pt-3 border-t border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between gap-3 text-xs">
+              <span class="text-[11px] text-zinc-500 dark:text-zinc-400">
                 ${s.aut ? '⚡ Automate 24/24' : '🕒 Ouvert'}
               </span>
               <a
                 href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}"
                 target="_blank"
                 rel="noopener"
-                class="inline-flex items-center gap-1 font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+                class="inline-flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors"
               >
                 <span>Y aller</span>
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -629,29 +706,67 @@ const regionDepts = (deptData as any[])
         }).addTo(map);
 
         nearby.forEach((s, i) => {
-          let priceTag = s.p.g ? `${s.p.g.toFixed(2)}€` : (s.p.e ? `${s.p.e.toFixed(2)}€` : 'Carbu');
           const isCheapest = i === 0;
+          let price = null;
+          let fuelTag = '';
+
+          if (targetFuel === 'gazole') {
+            price = s.p.g;
+            fuelTag = 'G';
+          } else if (targetFuel === 'e10') {
+            price = s.p.e;
+            fuelTag = 'E10';
+          } else if (targetFuel === 'sp98') {
+            price = s.p.s;
+            fuelTag = 'SP98';
+          } else if (targetFuel === 'e85') {
+            price = s.p.e85;
+            fuelTag = 'E85';
+          } else {
+            // All fuels: pick fuel matching the best comparison
+            if (s.p.e && (!s.p.g || s.p.e <= s.p.g)) {
+              price = s.p.e;
+              fuelTag = 'E10';
+            } else if (s.p.g) {
+              price = s.p.g;
+              fuelTag = 'G';
+            } else if (s.p.s) {
+              price = s.p.s;
+              fuelTag = 'SP98';
+            }
+          }
+
+          let tagHtml = '';
+          if (isCheapest && price) {
+            tagHtml = `★ ${price.toFixed(3)} € <span style="font-size:9px;opacity:0.9;">(${fuelTag})</span>`;
+          } else if (price) {
+            tagHtml = `${price.toFixed(3)} € <span style="font-size:9px;opacity:0.75;">(${fuelTag})</span>`;
+          } else {
+            tagHtml = `${s.b.toUpperCase()}`;
+          }
 
           const icon = window.L.divIcon({
             className: 'custom-map-pin',
-            html: `<div class="custom-price-pin ${isCheapest ? 'cheapest' : ''}">${priceTag}</div>`,
-            iconSize: [45, 20],
-            iconAnchor: [22, 10]
+            html: `<div class="custom-price-pin ${isCheapest ? 'cheapest' : ''}">${tagHtml}</div>`,
+            iconSize: isCheapest ? [96, 26] : [80, 22],
+            iconAnchor: isCheapest ? [48, 13] : [40, 11]
           });
 
-          window.L.marker([s.lt, s.lg], { icon })
+          window.L.marker([s.lt, s.lg], { icon, zIndexOffset: isCheapest ? 1000 : 1 })
             .addTo(map)
             .bindPopup(`
-              <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 12px; color: #f4f4f5; padding: 2px;">
-                <b style="font-size: 13px; color: #ffffff;">${s.n}</b><br/>
-                <span style="color: #a1a1aa;">${s.a}, ${s.v}</span><br/>
-                <hr style="margin: 6px 0; border: none; border-top: 1px solid #27272a;"/>
-                <div style="line-height: 1.5;">
-                  <b>Gazole:</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
-                  <b>SP95-E10:</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
-                  <b>SP98:</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}
+              <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 12px; padding: 3px; max-width: 220px;">
+                ${isCheapest ? '<div style="font-size:10px; font-weight:900; color:#16a34a; text-transform:uppercase; margin-bottom:2px;">★ N°1 Le Moins Cher</div>' : ''}
+                <b style="font-size: 13px;">${s.n}</b><br/>
+                <span style="opacity: 0.75; font-size: 11px;">${s.a}, ${s.v}</span><br/>
+                <hr style="margin: 6px 0; border: none; border-top: 1px solid rgba(128,128,128,0.25);"/>
+                <div style="line-height: 1.6; font-size: 11px;">
+                  <b>Gazole :</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
+                  <b>SP95-E10 :</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
+                  <b>SP98 :</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}
+                  ${s.p.e85 ? `<br/><b>E85 :</b> ${s.p.e85.toFixed(3)} €` : ''}
                 </div>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 11px; font-weight: bold; background: #2563eb; color: #ffffff; padding: 4px 10px; border-radius: 6px; text-decoration: none;">
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 11px; font-weight: bold; background: #2563eb; color: #ffffff; padding: 5px 12px; border-radius: 6px; text-decoration: none;">
                   Itinéraire GPS &rarr;
                 </a>
               </div>

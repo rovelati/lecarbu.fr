@@ -209,27 +209,32 @@ const pageDesc = `Trouvez les stations-service ${brand.name} les plus proches à
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
         }).addTo(map);
 
-        brandStations.forEach((s) => {
+        brandStations.forEach((s, i) => {
+          const isCheapest = i === 0;
+          let price = s.p.g || s.p.e || s.p.s || null;
+          let tagHtml = isCheapest && price ? `★ ${price.toFixed(3)} €` : (price ? `${price.toFixed(3)} €` : s.b.toUpperCase());
+
           const icon = window.L.divIcon({
             className: 'custom-map-pin',
-            html: `<div class="custom-price-pin">${s.p.g ? s.p.g.toFixed(2) + '€' : 'Carbu'}</div>`,
-            iconSize: [45, 20],
-            iconAnchor: [22, 10]
+            html: `<div class="custom-price-pin ${isCheapest ? 'cheapest' : ''}">${tagHtml}</div>`,
+            iconSize: isCheapest ? [90, 26] : [78, 22],
+            iconAnchor: isCheapest ? [45, 13] : [39, 11]
           });
 
-          window.L.marker([s.lt, s.lg], { icon })
+          window.L.marker([s.lt, s.lg], { icon, zIndexOffset: isCheapest ? 1000 : 1 })
             .addTo(map)
             .bindPopup(`
-              <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 12px; color: #f4f4f5; padding: 2px;">
-                <b style="font-size: 13px; color: #ffffff;">${s.n}</b><br/>
-                <span style="color: #a1a1aa;">${s.a}, ${s.v}</span><br/>
-                <hr style="margin: 6px 0; border: none; border-top: 1px solid #27272a;"/>
-                <div style="line-height: 1.5;">
-                  <b>Gazole:</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
-                  <b>SP95-E10:</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
-                  <b>SP98:</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}
+              <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 12px; padding: 3px; max-width: 220px;">
+                ${isCheapest ? '<div style="font-size:10px; font-weight:900; color:#16a34a; text-transform:uppercase; margin-bottom:2px;">★ N°1 Le Moins Cher</div>' : ''}
+                <b style="font-size: 13px;">${s.n}</b><br/>
+                <span style="opacity: 0.75; font-size: 11px;">${s.a}, ${s.v}</span><br/>
+                <hr style="margin: 6px 0; border: none; border-top: 1px solid rgba(128,128,128,0.25);"/>
+                <div style="line-height: 1.6; font-size: 11px;">
+                  <b>Gazole :</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
+                  <b>SP95-E10 :</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
+                  <b>SP98 :</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}
                 </div>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 11px; font-weight: bold; background: #2563eb; color: #ffffff; padding: 4px 10px; border-radius: 6px; text-decoration: none;">
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 11px; font-weight: bold; background: #2563eb; color: #ffffff; padding: 5px 12px; border-radius: 6px; text-decoration: none;">
                   Itinéraire GPS &rarr;
                 </a>
               </div>
