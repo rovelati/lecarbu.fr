@@ -365,10 +365,10 @@ const pageDesc = fuelFilter
 
       // Initialize Leaflet Map
       if (typeof window.L !== 'undefined') {
-        const map = window.L.map('city-map').setView([cityLat, cityLng], 12);
-        window.L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        const map = window.L.map('city-map', { scrollWheelZoom: false }).setView([cityLat, cityLng], 12);
+        window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
         }).addTo(map);
 
         nearby.forEach((s, i) => {
@@ -385,14 +385,16 @@ const pageDesc = fuelFilter
           window.L.marker([s.lt, s.lg], { icon })
             .addTo(map)
             .bindPopup(`
-              <div style="font-family: sans-serif; font-size: 12px; color: #18181b;">
-                <b style="font-size: 13px;">${s.n}</b><br/>
-                <span style="color: #71717a;">${s.a}, ${s.v}</span><br/>
-                <hr style="margin: 6px 0; border: none; border-top: 1px solid #e4e4e7;"/>
-                <b>Gazole:</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
-                <b>SP95-E10:</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
-                <b>SP98:</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}<br/>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" style="display: inline-block; margin-top: 6px; color: #2563eb; font-weight: bold; text-decoration: none;">
+              <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 12px; color: #f4f4f5; padding: 2px;">
+                <b style="font-size: 13px; color: #ffffff;">${s.n}</b><br/>
+                <span style="color: #a1a1aa;">${s.a}, ${s.v}</span><br/>
+                <hr style="margin: 6px 0; border: none; border-top: 1px solid #27272a;"/>
+                <div style="line-height: 1.5;">
+                  <b>Gazole:</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
+                  <b>SP95-E10:</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
+                  <b>SP98:</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}
+                </div>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" rel="noopener" style="display: inline-block; margin-top: 8px; font-size: 11px; font-weight: bold; background: #2563eb; color: #ffffff; padding: 4px 10px; border-radius: 6px; text-decoration: none;">
                   Itinéraire GPS &rarr;
                 </a>
               </div>

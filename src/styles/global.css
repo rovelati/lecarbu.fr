@@ -33,3 +33,21 @@
   color: #fff;
   border-color: #22c55e;
 }
+
+/* Dark Mode Leaflet Map Tiles (100% Free OpenStreetMap without any API Key watermark) */
+.leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
+}
+
+.leaflet-popup-content-wrapper {
+  background: #18181b !important;
+  color: #f4f4f5 !important;
+  border-radius: 0.875rem !important;
+  border: 1px solid #27272a !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+  padding: 4px !important;
+}
+
+.leaflet-popup-tip {
+  background: #18181b !important;
+}
