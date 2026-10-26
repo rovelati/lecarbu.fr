@@ -34,14 +34,22 @@ def slugify(text):
     text = re.sub(r'[^\w\s-]', '', text).strip().lower()
     return re.sub(r'[-\s]+', '-', text)
 
+import gzip
+
 def download_fuel_data():
     cache_file = os.path.join(DATA_DIR, 'prix_carburants_fr.json')
     # Try fetching JSON from data.economie.gouv.fr
     print("[1/5] Downloading French Government Open Fuel Data...")
     try:
-        req = urllib.request.Request(GOV_JSON_URL, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        req = urllib.request.Request(GOV_JSON_URL, headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            "Accept-Encoding": "gzip, deflate"
+        })
         with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.load(resp)
+            content = resp.read()
+            if content[:2] == b'\x1f\x8b':
+                content = gzip.decompress(content)
+            data = json.loads(content.decode('utf-8'))
             print(f"Downloaded {len(data)} stations from data.economie.gouv.fr")
             with open(cache_file, 'w', encoding='utf-8') as f:
                 json.dump(data, f)
