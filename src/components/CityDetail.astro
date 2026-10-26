@@ -2,9 +2,13 @@
 /**
  * CityDetail.astro — LeCarbu.fr
  * Renders the city fuel comparison page with interactive Leaflet map,
- * sorted price cards, cheapest station badges, and Schema.org GasStation data.
+ * sorted price cards, cheapest station badges, nearby cities interlinking,
+ * department overview, expert fuel savings tips, and Schema.org GasStation data.
  */
 import AdSlot from './AdSlot.astro';
+import citiesData from '../data/fr_cities.json';
+import deptData from '../data/fr_departements.json';
+import brandsData from '../data/fr_brands.json';
 
 interface Props {
   city: {
@@ -42,6 +46,49 @@ const pageTitle = fuelFilter
 const pageDesc = fuelFilter
   ? `Comparez les prix du ${activeFuelName} à ${city.name} (${city.deptName}). Trouvez la station-service la moins chère aujourd'hui grâce aux données officielles du Ministère.`
   : `Tous les prix de l'essence et du gazole à ${city.name} (${city.deptName}). Comparez les stations E.Leclerc, TotalEnergies, Carrefour, Intermarché pour faire votre plein au meilleur prix.`;
+
+const currentDept = (deptData as any[]).find(d => d.code === city.deptCode);
+const deptSlug = currentDept ? currentDept.slug : `${city.deptCode.toLowerCase()}-${city.deptName.toLowerCase()}`;
+
+// Haversine distance
+function getDistKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+// Bounding box filter for instant build speed
+const boxLat = 0.40;
+const boxLng = 0.50;
+let candidates = (citiesData as any[]).filter(c =>
+  c.slug !== city.slug &&
+  Math.abs(c.lat - city.lat) < boxLat &&
+  Math.abs(c.lng - city.lng) < boxLng
+);
+if (candidates.length < 6) {
+  candidates = (citiesData as any[]).filter(c => c.slug !== city.slug);
+}
+
+const nearbyCities = candidates
+  .map(c => ({
+    ...c,
+    distKm: getDistKm(city.lat, city.lng, c.lat, c.lng),
+  }))
+  .sort((a, b) => a.distKm - b.distKm)
+  .slice(0, 9);
+
+// Department main cities (excluding current city)
+const deptMainCities = (citiesData as any[])
+  .filter(c => c.deptCode === city.deptCode && c.slug !== city.slug)
+  .slice(0, 10);
+
+// Neighboring departments in the same region
+const regionDepts = (deptData as any[])
+  .filter(d => d.region === city.regionName && d.code !== city.deptCode)
+  .slice(0, 6);
 ---
 
 <div class="max-w-7xl mx-auto px-4 py-8">
@@ -49,7 +96,7 @@ const pageDesc = fuelFilter
   <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6 flex-wrap" aria-label="Fil d'Ariane">
     <a href="/" class="hover:text-blue-400 transition-colors">Accueil</a>
     <span>/</span>
-    <a href={`/departement/${city.deptCode.toLowerCase()}/`} class="hover:text-blue-400 transition-colors">
+    <a href={`/departement/${deptSlug}/`} class="hover:text-blue-400 transition-colors">
       {city.deptName} ({city.deptCode})
     </a>
     <span>/</span>
@@ -195,6 +242,216 @@ const pageDesc = fuelFilter
       <div class="col-span-full p-8 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/60">
         <div class="inline-block animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-3"></div>
         <div class="text-sm font-semibold text-zinc-300">Chargement des tarifs en direct pour {city.name}...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Villes et Communes Voisines (Interlinking SEO) -->
+  {nearbyCities.length > 0 && (
+    <section class="mb-12">
+      <div class="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 sm:p-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-2">
+              📍 Villes Limitrophes & Alentours
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Prix du Carburant dans les Communes Voisines de {city.name}
+            </h2>
+            <p class="text-xs sm:text-sm text-zinc-400 mt-1">
+              Comparez les tarifs de l'essence et du gazole dans un rayon de 10 à 30 km autour de {city.name} :
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {nearbyCities.map((nc) => (
+            <div class="p-4 rounded-xl border border-zinc-800 bg-zinc-950/70 hover:border-blue-500/50 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <a
+                    href={`/prix-carburant/${nc.slug}/`}
+                    class="font-bold text-white group-hover:text-blue-400 transition-colors text-sm hover:underline"
+                  >
+                    {nc.name}
+                  </a>
+                  <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300">
+                    à {nc.distKm.toFixed(1)} km
+                  </span>
+                </div>
+                <div class="text-xs text-zinc-400 mb-3">
+                  {nc.deptName} ({nc.deptCode}) • {nc.stationCount} station{nc.stationCount > 1 ? 's' : ''}
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+                  <div class="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-center">
+                    <span class="text-[10px] text-zinc-400 uppercase font-bold block">Gazole dès</span>
+                    <span class="font-black text-emerald-400">{nc.minGazole ? `${nc.minGazole.toFixed(3)} €` : '—'}</span>
+                  </div>
+                  <div class="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-center">
+                    <span class="text-[10px] text-zinc-400 uppercase font-bold block">SP95 dès</span>
+                    <span class="font-black text-emerald-400">{nc.minE10 ? `${nc.minE10.toFixed(3)} €` : '—'}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400">
+                <a href={`/prix-carburant/${nc.slug}/gazole/`} class="hover:text-blue-400 transition-colors">Gazole</a>
+                <span>•</span>
+                <a href={`/prix-carburant/${nc.slug}/essence-e10/`} class="hover:text-blue-400 transition-colors">SP95-E10</a>
+                <span>•</span>
+                <a href={`/prix-carburant/${nc.slug}/sp98/`} class="hover:text-blue-400 transition-colors">SP98</a>
+                <span>•</span>
+                <a href={`/prix-carburant/${nc.slug}/`} class="text-blue-400 font-semibold hover:underline">Voir tout &rarr;</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Conseils & Tips SEO Économie Carburant -->
+  <section class="mb-12">
+    <div class="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900/90 via-zinc-900/50 to-blue-950/20 p-6 sm:p-8">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xl">💡</span>
+        <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Guide Pratique & Économies</span>
+      </div>
+      <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+        Conseils d'Experts pour Payer Moins Cher son Carburant à {city.name}
+      </h2>
+      <p class="text-xs sm:text-sm text-zinc-400 mb-6 max-w-3xl">
+        Entre la station la plus chère et la plus avantageuse à {city.name} ou dans le département {city.deptName}, l'écart peut dépasser 20 centimes par litre, soit plus de 10 € d'économie sur chaque plein de 50 litres. Voici 4 astuces incontournables :
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">1</span>
+            <h3 class="text-sm font-bold text-white">Privilégiez les Grandes Surfaces (GDO)</h3>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Les stations E.Leclerc, Carrefour, Intermarché et Système U utilisent souvent le carburant comme produit d'appel en vendant à prix coûtant ou avec des marges minimes (1 à 2 centimes/L). Évitez au maximum les stations d'autoroute dont les prix sont majorés de 15 % à 25 %.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xs flex items-center justify-center">2</span>
+            <h3 class="text-sm font-bold text-white">Optez pour le SP95-E10 plutôt que le SP98</h3>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            À {city.name}, le SP95-E10 est généralement 8 à 12 centimes moins cher par litre que le SP98. Tous les véhicules essence construits depuis 2000 sont 100 % compatibles, ce qui représente environ 120 à 150 € d'économie sur une année moyenne de roulage.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xs flex items-center justify-center">3</span>
+            <h3 class="text-sm font-bold text-white">Vérifiez la Pression des Pneus et Conduisez Souple</h3>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Rouler avec des pneus sous-gonflés de seulement 0,5 bar entraîne une hausse de consommation de 3 % à 5 %. Adopter l'éco-conduite en anticipant les ralentissements et en passant les vitesses à bas régime permet de réduire votre consommation de carburant de 10 % à 15 %.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl border border-zinc-800 bg-zinc-950/60 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 font-bold text-xs flex items-center justify-center">4</span>
+            <h3 class="text-sm font-bold text-white">Surveillez les Tendances en Milieu de Semaine</h3>
+          </div>
+          <p class="text-xs text-zinc-400 leading-relaxed">
+            Les prix des carburants à la pompe connaissent souvent des ajustements avant le week-end. Consulter LeCarbu.fr les mardis et mercredis permet de trouver les prix les plus bas avant les affluences de fins de semaine.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Département & Communes Principales -->
+  <section class="mb-12">
+    <div class="p-6 sm:p-8 rounded-2xl bg-zinc-900/60 border border-zinc-800">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-6 border-b border-zinc-800">
+        <div>
+          <div class="text-xs font-bold uppercase tracking-wider text-blue-400 mb-1">
+            Département {city.deptName} ({city.deptCode})
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+            Toutes les stations en {city.deptName}
+          </h2>
+          <p class="text-xs sm:text-sm text-zinc-400 mt-1">
+            Retrouvez le classement officiel des {currentDept?.stationCount || 'nombreuses'} stations du département {city.deptName} ({city.regionName}).
+          </p>
+        </div>
+        <a
+          href={`/departement/${deptSlug}/`}
+          class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs bg-blue-600 hover:bg-blue-500 text-white transition-all whitespace-nowrap shadow-md shadow-blue-600/20"
+        >
+          <span>Voir le département {city.deptCode}</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+
+      <!-- Principales villes du département -->
+      {deptMainCities.length > 0 && (
+        <div class="mb-6">
+          <div class="text-xs font-bold text-zinc-300 uppercase tracking-wider mb-3">
+            Grandes communes en {city.deptName} :
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {deptMainCities.map(dc => (
+              <a
+                href={`/prix-carburant/${dc.slug}/`}
+                class="px-3 py-1.5 rounded-lg text-xs bg-zinc-950/80 border border-zinc-800 hover:border-zinc-700 hover:text-blue-400 transition-colors text-zinc-300"
+              >
+                {dc.name}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Autres départements de la région -->
+      {regionDepts.length > 0 && (
+        <div class="pt-4 border-t border-zinc-800/80">
+          <div class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">
+            Autres départements en {city.regionName} :
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {regionDepts.map(rd => (
+              <a
+                href={`/departement/${rd.slug}/`}
+                class="px-2.5 py-1 rounded-md text-[11px] bg-zinc-950 border border-zinc-800/70 hover:border-zinc-600 text-zinc-400 hover:text-white transition-colors"
+              >
+                {rd.name} ({rd.code})
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Marques & Enseignes à cette commune -->
+  <section class="mb-12">
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+      <h2 class="text-base font-bold text-white mb-2">
+        Rechercher par Enseigne à {city.name}
+      </h2>
+      <p class="text-xs text-zinc-400 mb-4">
+        Consultez les prix par marque de distributeur à {city.name} et dans ses environs :
+      </p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        {(brandsData as any[]).map(b => (
+          <a
+            href={`/enseigne/${b.slug}/${city.slug}/`}
+            class="p-2.5 rounded-xl border border-zinc-800 bg-zinc-950/60 hover:border-blue-500/40 text-center transition-all group"
+          >
+            <span class="block text-xs font-bold text-zinc-200 group-hover:text-blue-400">{b.name}</span>
+            <span class="text-[10px] text-zinc-400">{b.category}</span>
+          </a>
+        ))}
       </div>
     </div>
   </section>
