@@ -276,6 +276,99 @@ const canonicalURL = canonical.endsWith('/') ? canonical : `${canonical}/`;
         </div>
       </div>
 
+      <!-- Réseau Européen des Carburants (Cross-Linking SEO International) -->
+      <div class="pt-8 border-t border-zinc-200 dark:border-zinc-800/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 mb-1">
+              🇪🇺 Réseau Européen des Carburants
+            </div>
+            <p class="text-xs font-bold text-zinc-900 dark:text-zinc-200">
+              Nos comparateurs officiels des prix des carburants dans les principaux pays européens :
+            </p>
+          </div>
+          <span class="text-[11px] text-zinc-500">Données gouvernementales ouvertes (Open Data)</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <!-- France (Ce site) -->
+          <div class="p-3.5 rounded-xl border border-blue-500/40 bg-blue-50/40 dark:bg-blue-950/20 relative">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm font-black text-zinc-900 dark:text-white flex items-center gap-1.5">
+                <span>🇫🇷</span>
+                <span>LeCarbu.fr</span>
+              </span>
+              <span class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-700 dark:text-blue-300">
+                France • Actif
+              </span>
+            </div>
+            <p class="text-[11px] text-zinc-600 dark:text-zinc-400 leading-snug">
+              Prix des carburants en France (Gazole & SP95) via le flux officiel du Ministère de l'Économie.
+            </p>
+          </div>
+
+          <!-- Italie -->
+          <a
+            href="https://prezzobenza.it/"
+            hreflang="it-IT"
+            target="_blank"
+            rel="noopener"
+            class="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/40 hover:border-emerald-500/50 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/80 transition-all group"
+          >
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+                <span>🇮🇹</span>
+                <span>PrezzoBenza.it</span>
+              </span>
+              <span class="text-[9px] font-semibold text-zinc-500 dark:text-zinc-400">Italie &rarr;</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
+              Prezzi benzina, diesel, GPL e metano in tempo reale con Open Data ufficiali del MIMIT.
+            </p>
+          </a>
+
+          <!-- Allemagne -->
+          <a
+            href="https://spritchecker.de/"
+            hreflang="de-DE"
+            target="_blank"
+            rel="noopener"
+            class="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/40 hover:border-amber-500/50 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/80 transition-all group"
+          >
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors flex items-center gap-1.5">
+                <span>🇩🇪</span>
+                <span>SpritChecker.de</span>
+              </span>
+              <span class="text-[9px] font-semibold text-zinc-500 dark:text-zinc-400">Allemagne &rarr;</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
+              Spritpreise in Deutschland mit offiziellen MTS-K Daten des Bundeskartellamtes.
+            </p>
+          </a>
+
+          <!-- Royaume-Uni -->
+          <a
+            href="https://pumpchecker.co.uk/"
+            hreflang="en-GB"
+            target="_blank"
+            rel="noopener"
+            class="p-3.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/60 dark:bg-zinc-900/40 hover:border-sky-500/50 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/80 transition-all group"
+          >
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors flex items-center gap-1.5">
+                <span>🇬🇧</span>
+                <span>PumpChecker.co.uk</span>
+              </span>
+              <span class="text-[9px] font-semibold text-zinc-500 dark:text-zinc-400">UK &rarr;</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
+              UK petrol and diesel prices using official CMA Open Fuel Data scheme.
+            </p>
+          </a>
+        </div>
+      </div>
+
       <div class="pt-8 border-t border-zinc-900/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400">
         <div>
           &copy; {new Date().getFullYear()} <span class="text-white font-semibold">LeCarbu.fr</span>. Tous droits réservés. Données ouvertes soumises à la Licence Ouverte v2.0 (Etalab).
