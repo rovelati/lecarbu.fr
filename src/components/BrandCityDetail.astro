@@ -1,0 +1,242 @@
+---
+/**
+ * BrandCityDetail.astro — LeCarbu.fr
+ * Renders dedicated pages for supermarket / oil brand searches in specific cities
+ * e.g. "E.Leclerc à Nantes", "TotalEnergies à Paris", "Carrefour à Toulouse".
+ */
+import AdSlot from './AdSlot.astro';
+
+interface Props {
+  brand: {
+    slug: string;
+    name: string;
+    color: string;
+    category: string;
+  };
+  city: {
+    slug: string;
+    name: string;
+    deptCode: string;
+    deptName: string;
+    regionName: string;
+    lat: number;
+    lng: number;
+  };
+}
+
+const { brand, city } = Astro.props;
+
+const pageTitle = `Prix Carburant ${brand.name} à ${city.name} (${city.deptCode}) — Stations & Tarifs en Direct`;
+const pageDesc = `Trouvez les stations-service ${brand.name} les plus proches à ${city.name} (${city.deptName}). Consultez les prix en temps réel du Gazole, SP95-E10, SP98 et E85 chez ${brand.name}.`;
+---
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <!-- Breadcrumbs -->
+  <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6 flex-wrap" aria-label="Fil d'Ariane">
+    <a href="/" class="hover:text-blue-400 transition-colors">Accueil</a>
+    <span>/</span>
+    <a href={`/enseigne/${brand.slug}/`} class="hover:text-blue-400 transition-colors">{brand.name}</a>
+    <span>/</span>
+    <a href={`/prix-carburant/${city.slug}/`} class="hover:text-blue-400 transition-colors">{city.name}</a>
+    <span>/</span>
+    <span class="text-white font-semibold">{brand.name} {city.name}</span>
+  </nav>
+
+  <!-- Header -->
+  <header class="mb-8">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-3 border border-zinc-800 bg-zinc-900 text-zinc-300">
+      <span class="w-2 h-2 rounded-full" style={`background-color: ${brand.color}`}></span>
+      <span>{brand.category}</span>
+      <span>•</span>
+      <span>{city.name} ({city.deptCode})</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white">
+      Prix Carburant <span class="text-blue-400">{brand.name}</span> à {city.name}
+    </h1>
+    <p class="mt-2 text-sm text-zinc-400 max-w-3xl leading-relaxed">
+      {pageDesc}
+    </p>
+  </header>
+
+  <!-- Ad Slot Top -->
+  <AdSlot />
+
+  <!-- Interactive Map Section -->
+  <section class="mb-10">
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl">
+      <div class="p-4 border-b border-zinc-800/80 bg-zinc-900/90 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full animate-ping" style={`background-color: ${brand.color}`}></span>
+          <span class="text-xs font-bold text-white uppercase tracking-wider">
+            Stations {brand.name} — {city.name} & Rayon 30 km
+          </span>
+        </div>
+        <span class="text-xs text-zinc-400">Données gouvernementales officielles</span>
+      </div>
+      <div id="brand-city-map" class="w-full h-80 sm:h-96 z-10" data-lat={city.lat} data-lng={city.lng}></div>
+    </div>
+  </section>
+
+  <!-- Forecourts Cards Grid -->
+  <section class="mb-12">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-black text-white">
+        Stations {brand.name} Disponibles à Proximité
+      </h2>
+      <span id="brand-stations-count" class="px-2 py-0.5 rounded-full text-xs bg-zinc-800 text-zinc-300">
+        Recherche...
+      </span>
+    </div>
+
+    <div id="brand-stations-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="col-span-full p-8 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/60">
+        <div class="inline-block animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-3"></div>
+        <div class="text-sm font-semibold text-zinc-300">Localisation des stations {brand.name} autour de {city.name}...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- General City Alternative Links -->
+  <section class="mt-12 rounded-2xl border border-zinc-800 bg-zinc-900/40 p-6">
+    <h3 class="text-base font-bold text-white mb-2">Vous cherchez d'autres stations à {city.name} ?</h3>
+    <p class="text-xs text-zinc-400 mb-4">
+      Consultez le comparateur complet de toutes les enseignes (TotalEnergies, Leclerc, Carrefour, Intermarché, Esso, BP, stations indépendantes) à {city.name} :
+    </p>
+    <div class="flex items-center gap-3 flex-wrap">
+      <a href={`/prix-carburant/${city.slug}/`} class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors">
+        Toutes les stations à {city.name} &rarr;
+      </a>
+      <a href={`/prix-carburant/${city.slug}/gazole/`} class="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold text-xs transition-colors">
+        Gazole {city.name}
+      </a>
+      <a href={`/prix-carburant/${city.slug}/essence-e10/`} class="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold text-xs transition-colors">
+        SP95-E10 {city.name}
+      </a>
+      <a href={`/prix-carburant/${city.slug}/sp98/`} class="px-3 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-semibold text-xs transition-colors">
+        SP98 {city.name}
+      </a>
+    </div>
+  </section>
+</div>
+
+<script is:inline define:vars={{ cityLat: city.lat, cityLng: city.lng, brandSlug: brand.slug, brandName: brand.name }}>
+  (async function () {
+    const listContainer = document.getElementById('brand-stations-list');
+    const countBadge = document.getElementById('brand-stations-count');
+    const mapEl = document.getElementById('brand-city-map');
+
+    if (!listContainer || !mapEl) return;
+
+    try {
+      const res = await fetch('/fr_stations_index.json');
+      const allStations = await res.json();
+
+      function getDist(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      }
+
+      // Filter by brand slug and distance <= 35km
+      let brandStations = allStations
+        .filter(s => s.b === brandSlug)
+        .map(s => ({ ...s, dist: getDist(cityLat, cityLng, s.lt, s.lg) }))
+        .filter(s => s.dist <= 35)
+        .sort((a,b) => a.dist - b.dist);
+
+      if (brandStations.length === 0) {
+        // Fallback: nearest 5 of this brand regardless of distance
+        brandStations = allStations
+          .filter(s => s.b === brandSlug)
+          .map(s => ({ ...s, dist: getDist(cityLat, cityLng, s.lt, s.lg) }))
+          .sort((a,b) => a.dist - b.dist)
+          .slice(0, 5);
+      }
+
+      countBadge.textContent = `${brandStations.length} station${brandStations.length > 1 ? 's' : ''}`;
+
+      listContainer.innerHTML = brandStations.map((s, idx) => {
+        const isNearest = idx === 0;
+        return `
+          <article class="p-5 rounded-2xl border ${isNearest ? 'border-blue-500/60 bg-gradient-to-b from-blue-950/20 to-zinc-900/90' : 'border-zinc-800 bg-zinc-900/70'} flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold uppercase text-blue-400">${brandName}</span>
+                <span class="text-xs font-semibold text-zinc-400">${s.dist.toFixed(1)} km</span>
+              </div>
+              <h3 class="text-base font-bold text-white mb-1">${s.n}</h3>
+              <p class="text-xs text-zinc-400 mb-4">${s.a}, ${s.cp} ${s.v}</p>
+
+              <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="p-2 rounded-xl bg-zinc-950 border border-zinc-800 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-400">Gazole</div>
+                  <div class="text-sm font-black ${s.p.g ? 'text-white' : 'text-zinc-600'}">${s.p.g ? s.p.g.toFixed(3) + ' €' : '—'}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-zinc-950 border border-zinc-800 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-400">SP95-E10</div>
+                  <div class="text-sm font-black ${s.p.e ? 'text-white' : 'text-zinc-600'}">${s.p.e ? s.p.e.toFixed(3) + ' €' : '—'}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-zinc-950 border border-zinc-800 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-400">SP98</div>
+                  <div class="text-sm font-black ${s.p.s ? 'text-blue-400' : 'text-zinc-600'}">${s.p.s ? s.p.s.toFixed(3) + ' €' : '—'}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+              <span class="text-[11px] text-zinc-400">${s.aut ? '⚡ Automate 24/24' : '🕒 Station ouverte'}</span>
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}"
+                target="_blank"
+                class="font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                Itinéraire &rarr;
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      // Map
+      if (typeof window.L !== 'undefined') {
+        const map = window.L.map('brand-city-map').setView([cityLat, cityLng], 11);
+        window.L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        brandStations.forEach((s) => {
+          const icon = window.L.divIcon({
+            className: 'custom-map-pin',
+            html: `<div class="custom-price-pin">${s.p.g ? s.p.g.toFixed(2) + '€' : 'Carbu'}</div>`,
+            iconSize: [45, 20],
+            iconAnchor: [22, 10]
+          });
+
+          window.L.marker([s.lt, s.lg], { icon })
+            .addTo(map)
+            .bindPopup(`
+              <div style="font-family: sans-serif; font-size: 12px; color: #18181b;">
+                <b>${s.n}</b><br/>
+                <span style="color: #71717a;">${s.a}, ${s.v}</span><br/>
+                <hr style="margin: 4px 0; border: none; border-top: 1px solid #e4e4e7;"/>
+                <b>Gazole:</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
+                <b>SP95-E10:</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
+                <b>SP98:</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}<br/>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" style="color: #2563eb; font-weight: bold;">
+                  Itinéraire GPS &rarr;
+                </a>
+              </div>
+            `);
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      listContainer.innerHTML = '<div class="col-span-full p-4 text-center text-red-400">Erreur lors de la récupération des stations.</div>';
+    }
+  })();
+</script>

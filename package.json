@@ -1,0 +1,21 @@
+{
+  "name": "lecarbu-fr",
+  "version": "1.0.0",
+  "description": "LeCarbu.fr — Prix des carburants en direct en France. Trouvez la station essence la moins chère près de chez vous (Gazole, SP95-E10, SP98, E85, GPLc) grâce aux données officielles du Ministère de l'Économie.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "build-data": "python3 scripts/build-fr-database.py"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@tailwindcss/vite": "^4.0.9",
+    "astro": "^5.4.2",
+    "tailwindcss": "^4.0.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0"
+  }
+}

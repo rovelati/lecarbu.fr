@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+.cloudflare-token
+.new-server-passwd
+NUOVO-SERVER.ssh
+.DS_Store
+*.log
+data/prix-carburants*.json

@@ -1,0 +1,93 @@
+---
+/**
+ * AdSlot.astro — Discreet, lazy-loaded AdSense container for LeCarbu.fr
+ */
+interface Props {
+  slotId?: string;
+  format?: 'auto' | 'horizontal' | 'rectangle';
+  className?: string;
+}
+
+const {
+  slotId,
+  format = 'auto',
+  className = '',
+} = Astro.props;
+---
+
+<aside
+  class={`lc-ad-container my-8 rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 text-center ${className}`}
+  aria-label="Publicité"
+>
+  <div class="mb-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-500 select-none">
+    <span>PUBLICITÉ</span>
+  </div>
+  <div class="flex w-full items-center justify-center overflow-hidden" style="min-height: 100px;">
+    {slotId ? (
+      <ins
+        class="adsbygoogle"
+        style="display:block; min-height: 100px; width:100%;"
+        data-ad-client="ca-pub-2168172914069272"
+        data-ad-slot={slotId}
+        data-ad-format={format}
+        data-full-width-responsive="true"
+      ></ins>
+    ) : (
+      <ins
+        class="adsbygoogle"
+        style="display:block; min-height: 100px; width:100%;"
+        data-ad-client="ca-pub-2168172914069272"
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      ></ins>
+    )}
+  </div>
+</aside>
+
+<script is:inline>
+  (function () {
+    if (typeof window === 'undefined') return;
+    if (window.__lcAdsInit) return;
+    window.__lcAdsInit = true;
+
+    function pushAd(ins) {
+      if (!ins || ins.getAttribute('data-lc-loaded') === '1') return;
+      ins.setAttribute('data-lc-loaded', '1');
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {}
+    }
+
+    function initAds() {
+      const adElements = document.querySelectorAll('ins.adsbygoogle');
+      if (!('IntersectionObserver' in window)) {
+        adElements.forEach(pushAd);
+        return;
+      }
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              pushAd(entry.target);
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: '300px 0px' }
+      );
+      adElements.forEach((el) => observer.observe(el));
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAds);
+    } else {
+      initAds();
+    }
+  })();
+</script>
+
+<style>
+  .lc-ad-container:has(ins[data-ad-status="unfilled"]) {
+    display: none !important;
+  }
+</style>

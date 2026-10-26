@@ -1,0 +1,38 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BrandCityDetail from '../../../components/BrandCityDetail.astro';
+import brandCitiesData from '../../../data/brand_cities.json';
+import brandsData from '../../../data/fr_brands.json';
+
+export async function getStaticPaths() {
+  const brandLookup = Object.fromEntries(brandsData.map(b => [b.slug, b]));
+
+  return brandCitiesData.map(item => ({
+    params: {
+      brand: item.brandSlug,
+      city: item.citySlug,
+    },
+    props: {
+      brand: brandLookup[item.brandSlug],
+      city: {
+        slug: item.citySlug,
+        name: item.cityName,
+        deptCode: item.deptCode,
+        deptName: item.deptName,
+        regionName: item.regionName,
+        lat: item.lat,
+        lng: item.lng,
+      },
+    },
+  }));
+}
+
+const { brand, city } = Astro.props;
+---
+
+<Layout
+  title={`Prix Carburant ${brand.name} à ${city.name} (${city.deptCode}) — Stations & Tarifs en Direct`}
+  description={`Trouvez les stations-service ${brand.name} les plus proches à ${city.name} (${city.deptName}). Consultez les prix en direct du Gazole, SP95-E10, SP98 et E85 chez ${brand.name}.`}
+>
+  <BrandCityDetail brand={brand} city={city} />
+</Layout>

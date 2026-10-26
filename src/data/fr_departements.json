@@ -1,0 +1,866 @@
+[
+  {
+    "code": "01",
+    "name": "Ain",
+    "slug": "01-ain",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 121,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "02",
+    "name": "Aisne",
+    "slug": "02-aisne",
+    "region": "Hauts-de-France",
+    "stationCount": 92,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "03",
+    "name": "Allier",
+    "slug": "03-allier",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 81,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "04",
+    "name": "Alpes-de-Haute-Provence",
+    "slug": "04-alpes-de-haute-provence",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "stationCount": 55,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "05",
+    "name": "Hautes-Alpes",
+    "slug": "05-hautes-alpes",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "stationCount": 43,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "06",
+    "name": "Alpes-Maritimes",
+    "slug": "06-alpes-maritimes",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "stationCount": 143,
+    "minGazole": 2.192,
+    "minE10": 1.99
+  },
+  {
+    "code": "07",
+    "name": "Ardèche",
+    "slug": "07-ardeche",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 72,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "08",
+    "name": "Ardennes",
+    "slug": "08-ardennes",
+    "region": "Grand Est",
+    "stationCount": 49,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "09",
+    "name": "Ariège",
+    "slug": "09-ariege",
+    "region": "Occitanie",
+    "stationCount": 34,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "10",
+    "name": "Aube",
+    "slug": "10-aube",
+    "region": "Grand Est",
+    "stationCount": 70,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "11",
+    "name": "Aude",
+    "slug": "11-aude",
+    "region": "Occitanie",
+    "stationCount": 86,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "12",
+    "name": "Aveyron",
+    "slug": "12-aveyron",
+    "region": "Occitanie",
+    "stationCount": 89,
+    "minGazole": 1.369,
+    "minE10": 1.989
+  },
+  {
+    "code": "13",
+    "name": "Bouches-du-Rhône",
+    "slug": "13-bouches-du-rhone",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "stationCount": 274,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "14",
+    "name": "Calvados",
+    "slug": "14-calvados",
+    "region": "Normandie",
+    "stationCount": 119,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "15",
+    "name": "Cantal",
+    "slug": "15-cantal",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 51,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "16",
+    "name": "Charente",
+    "slug": "16-charente",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 68,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "17",
+    "name": "Charente-Maritime",
+    "slug": "17-charente-maritime",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 119,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "18",
+    "name": "Cher",
+    "slug": "18-cher",
+    "region": "Centre-Val de Loire",
+    "stationCount": 64,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "19",
+    "name": "Corrèze",
+    "slug": "19-correze",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 63,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "21",
+    "name": "Côte-d'Or",
+    "slug": "21-cote-dor",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 126,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "22",
+    "name": "Côtes-d'Armor",
+    "slug": "22-cotes-darmor",
+    "region": "Bretagne",
+    "stationCount": 114,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "23",
+    "name": "Creuse",
+    "slug": "23-creuse",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 33,
+    "minGazole": 2.383,
+    "minE10": 1.99
+  },
+  {
+    "code": "24",
+    "name": "Dordogne",
+    "slug": "24-dordogne",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 102,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "25",
+    "name": "Doubs",
+    "slug": "25-doubs",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 102,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "26",
+    "name": "Drôme",
+    "slug": "26-drome",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 119,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "27",
+    "name": "Eure",
+    "slug": "27-eure",
+    "region": "Normandie",
+    "stationCount": 95,
+    "minGazole": 2.229,
+    "minE10": 1.99
+  },
+  {
+    "code": "28",
+    "name": "Eure-et-Loir",
+    "slug": "28-eure-et-loir",
+    "region": "Centre-Val de Loire",
+    "stationCount": 77,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "29",
+    "name": "Finistère",
+    "slug": "29-finistere",
+    "region": "Bretagne",
+    "stationCount": 144,
+    "minGazole": 2.19,
+    "minE10": 1.99
+  },
+  {
+    "code": "2A",
+    "name": "Corse-du-Sud",
+    "slug": "2a-corse-du-sud",
+    "region": "Corse",
+    "stationCount": 59,
+    "minGazole": 2.195,
+    "minE10": null
+  },
+  {
+    "code": "2B",
+    "name": "Haute-Corse",
+    "slug": "2b-haute-corse",
+    "region": "Corse",
+    "stationCount": 68,
+    "minGazole": 2.19,
+    "minE10": null
+  },
+  {
+    "code": "30",
+    "name": "Gard",
+    "slug": "30-gard",
+    "region": "Occitanie",
+    "stationCount": 139,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "31",
+    "name": "Haute-Garonne",
+    "slug": "31-haute-garonne",
+    "region": "Occitanie",
+    "stationCount": 192,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "32",
+    "name": "Gers",
+    "slug": "32-gers",
+    "region": "Occitanie",
+    "stationCount": 49,
+    "minGazole": 2.225,
+    "minE10": 1.99
+  },
+  {
+    "code": "33",
+    "name": "Gironde",
+    "slug": "33-gironde",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 226,
+    "minGazole": 2.21,
+    "minE10": 1.99
+  },
+  {
+    "code": "34",
+    "name": "Hérault",
+    "slug": "34-herault",
+    "region": "Occitanie",
+    "stationCount": 162,
+    "minGazole": 2.225,
+    "minE10": 1.99
+  },
+  {
+    "code": "35",
+    "name": "Ille-et-Vilaine",
+    "slug": "35-ille-et-vilaine",
+    "region": "Bretagne",
+    "stationCount": 149,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "36",
+    "name": "Indre",
+    "slug": "36-indre",
+    "region": "Centre-Val de Loire",
+    "stationCount": 47,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "37",
+    "name": "Indre-et-Loire",
+    "slug": "37-indre-et-loire",
+    "region": "Centre-Val de Loire",
+    "stationCount": 91,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "38",
+    "name": "Isère",
+    "slug": "38-isere",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 190,
+    "minGazole": 2.248,
+    "minE10": 1.99
+  },
+  {
+    "code": "39",
+    "name": "Jura",
+    "slug": "39-jura",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 78,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "40",
+    "name": "Landes",
+    "slug": "40-landes",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 103,
+    "minGazole": 2.09,
+    "minE10": 1.99
+  },
+  {
+    "code": "41",
+    "name": "Loir-et-Cher",
+    "slug": "41-loir-et-cher",
+    "region": "Centre-Val de Loire",
+    "stationCount": 64,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "42",
+    "name": "Loire",
+    "slug": "42-loire",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 128,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "43",
+    "name": "Haute-Loire",
+    "slug": "43-haute-loire",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 55,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "44",
+    "name": "Loire-Atlantique",
+    "slug": "44-loire-atlantique",
+    "region": "Pays de la Loire",
+    "stationCount": 175,
+    "minGazole": 2.24,
+    "minE10": 1.99
+  },
+  {
+    "code": "45",
+    "name": "Loiret",
+    "slug": "45-loiret",
+    "region": "Centre-Val de Loire",
+    "stationCount": 110,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "46",
+    "name": "Lot",
+    "slug": "46-lot",
+    "region": "Occitanie",
+    "stationCount": 64,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "47",
+    "name": "Lot-et-Garonne",
+    "slug": "47-lot-et-garonne",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 83,
+    "minGazole": 2.249,
+    "minE10": 1.989
+  },
+  {
+    "code": "48",
+    "name": "Lozère",
+    "slug": "48-lozere",
+    "region": "Occitanie",
+    "stationCount": 37,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "49",
+    "name": "Maine-et-Loire",
+    "slug": "49-maine-et-loire",
+    "region": "Pays de la Loire",
+    "stationCount": 108,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "50",
+    "name": "Manche",
+    "slug": "50-manche",
+    "region": "Normandie",
+    "stationCount": 122,
+    "minGazole": 2.245,
+    "minE10": 1.99
+  },
+  {
+    "code": "51",
+    "name": "Marne",
+    "slug": "51-marne",
+    "region": "Grand Est",
+    "stationCount": 88,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "52",
+    "name": "Haute-Marne",
+    "slug": "52-haute-marne",
+    "region": "Grand Est",
+    "stationCount": 51,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "53",
+    "name": "Mayenne",
+    "slug": "53-mayenne",
+    "region": "Pays de la Loire",
+    "stationCount": 55,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "54",
+    "name": "Meurthe-et-Moselle",
+    "slug": "54-meurthe-et-moselle",
+    "region": "Grand Est",
+    "stationCount": 94,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "55",
+    "name": "Meuse",
+    "slug": "55-meuse",
+    "region": "Grand Est",
+    "stationCount": 37,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "56",
+    "name": "Morbihan",
+    "slug": "56-morbihan",
+    "region": "Bretagne",
+    "stationCount": 142,
+    "minGazole": 2.25,
+    "minE10": 1.971
+  },
+  {
+    "code": "57",
+    "name": "Moselle",
+    "slug": "57-moselle",
+    "region": "Grand Est",
+    "stationCount": 131,
+    "minGazole": 2.225,
+    "minE10": 1.99
+  },
+  {
+    "code": "58",
+    "name": "Nièvre",
+    "slug": "58-nievre",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 60,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "59",
+    "name": "Nord",
+    "slug": "59-nord",
+    "region": "Hauts-de-France",
+    "stationCount": 252,
+    "minGazole": 2.203,
+    "minE10": 1.989
+  },
+  {
+    "code": "60",
+    "name": "Oise",
+    "slug": "60-oise",
+    "region": "Hauts-de-France",
+    "stationCount": 117,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "61",
+    "name": "Orne",
+    "slug": "61-orne",
+    "region": "Normandie",
+    "stationCount": 58,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "62",
+    "name": "Pas-de-Calais",
+    "slug": "62-pas-de-calais",
+    "region": "Hauts-de-France",
+    "stationCount": 230,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "63",
+    "name": "Puy-de-Dôme",
+    "slug": "63-puy-de-dome",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 118,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "64",
+    "name": "Pyrénées-Atlantiques",
+    "slug": "64-pyrenees-atlantiques",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 116,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "65",
+    "name": "Hautes-Pyrénées",
+    "slug": "65-hautes-pyrenees",
+    "region": "Occitanie",
+    "stationCount": 49,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "66",
+    "name": "Pyrénées-Orientales",
+    "slug": "66-pyrenees-orientales",
+    "region": "Occitanie",
+    "stationCount": 72,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "67",
+    "name": "Bas-Rhin",
+    "slug": "67-bas-rhin",
+    "region": "Grand Est",
+    "stationCount": 149,
+    "minGazole": 2.25,
+    "minE10": 1.975
+  },
+  {
+    "code": "68",
+    "name": "Haut-Rhin",
+    "slug": "68-haut-rhin",
+    "region": "Grand Est",
+    "stationCount": 114,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "69",
+    "name": "Rhône",
+    "slug": "69-rhone",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 200,
+    "minGazole": 2.24,
+    "minE10": 1.989
+  },
+  {
+    "code": "70",
+    "name": "Haute-Saône",
+    "slug": "70-haute-saone",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 54,
+    "minGazole": 2.369,
+    "minE10": 2.099
+  },
+  {
+    "code": "71",
+    "name": "Saône-et-Loire",
+    "slug": "71-saone-et-loire",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 144,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "72",
+    "name": "Sarthe",
+    "slug": "72-sarthe",
+    "region": "Pays de la Loire",
+    "stationCount": 97,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "73",
+    "name": "Savoie",
+    "slug": "73-savoie",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 92,
+    "minGazole": 2.248,
+    "minE10": 1.99
+  },
+  {
+    "code": "74",
+    "name": "Haute-Savoie",
+    "slug": "74-haute-savoie",
+    "region": "Auvergne-Rhône-Alpes",
+    "stationCount": 128,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "75",
+    "name": "Paris",
+    "slug": "75-paris",
+    "region": "Île-de-France",
+    "stationCount": 47,
+    "minGazole": 2.2,
+    "minE10": 1.88
+  },
+  {
+    "code": "76",
+    "name": "Seine-Maritime",
+    "slug": "76-seine-maritime",
+    "region": "Normandie",
+    "stationCount": 170,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "77",
+    "name": "Seine-et-Marne",
+    "slug": "77-seine-et-marne",
+    "region": "Île-de-France",
+    "stationCount": 175,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "78",
+    "name": "Yvelines",
+    "slug": "78-yvelines",
+    "region": "Île-de-France",
+    "stationCount": 142,
+    "minGazole": 2.225,
+    "minE10": 1.99
+  },
+  {
+    "code": "79",
+    "name": "Deux-Sèvres",
+    "slug": "79-deux-sevres",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 70,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "80",
+    "name": "Somme",
+    "slug": "80-somme",
+    "region": "Hauts-de-France",
+    "stationCount": 111,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "81",
+    "name": "Tarn",
+    "slug": "81-tarn",
+    "region": "Occitanie",
+    "stationCount": 73,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "82",
+    "name": "Tarn-et-Garonne",
+    "slug": "82-tarn-et-garonne",
+    "region": "Occitanie",
+    "stationCount": 64,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "83",
+    "name": "Var",
+    "slug": "83-var",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "stationCount": 175,
+    "minGazole": 2.249,
+    "minE10": 1.99
+  },
+  {
+    "code": "84",
+    "name": "Vaucluse",
+    "slug": "84-vaucluse",
+    "region": "Provence-Alpes-Côte d'Azur",
+    "stationCount": 104,
+    "minGazole": 2.25,
+    "minE10": 1.982
+  },
+  {
+    "code": "85",
+    "name": "Vendée",
+    "slug": "85-vendee",
+    "region": "Pays de la Loire",
+    "stationCount": 121,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "86",
+    "name": "Vienne",
+    "slug": "86-vienne",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 74,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "87",
+    "name": "Haute-Vienne",
+    "slug": "87-haute-vienne",
+    "region": "Nouvelle-Aquitaine",
+    "stationCount": 84,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "88",
+    "name": "Vosges",
+    "slug": "88-vosges",
+    "region": "Grand Est",
+    "stationCount": 83,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "89",
+    "name": "Yonne",
+    "slug": "89-yonne",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 86,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "90",
+    "name": "Territoire de Belfort",
+    "slug": "90-territoire-de-belfort",
+    "region": "Bourgogne-Franche-Comté",
+    "stationCount": 18,
+    "minGazole": 2.398,
+    "minE10": 2.074
+  },
+  {
+    "code": "91",
+    "name": "Essonne",
+    "slug": "91-essonne",
+    "region": "Île-de-France",
+    "stationCount": 130,
+    "minGazole": 2.109,
+    "minE10": 1.99
+  },
+  {
+    "code": "92",
+    "name": "Hauts-de-Seine",
+    "slug": "92-hauts-de-seine",
+    "region": "Île-de-France",
+    "stationCount": 66,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "93",
+    "name": "Seine-Saint-Denis",
+    "slug": "93-seine-saint-denis",
+    "region": "Île-de-France",
+    "stationCount": 83,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "94",
+    "name": "Val-de-Marne",
+    "slug": "94-val-de-marne",
+    "region": "Île-de-France",
+    "stationCount": 79,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  },
+  {
+    "code": "95",
+    "name": "Val-d'Oise",
+    "slug": "95-val-doise",
+    "region": "Île-de-France",
+    "stationCount": 109,
+    "minGazole": 2.25,
+    "minE10": 1.99
+  }
+]

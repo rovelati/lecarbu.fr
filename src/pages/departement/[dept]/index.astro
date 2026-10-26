@@ -1,0 +1,66 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import deptData from '../../../data/fr_departements.json';
+import citiesData from '../../../data/fr_cities.json';
+
+export async function getStaticPaths() {
+  return deptData.map(d => ({
+    params: { dept: d.slug },
+    props: { dept: d },
+  }));
+}
+
+const { dept } = Astro.props;
+const deptCities = citiesData.filter(c => c.deptCode === dept.code).slice(0, 48);
+---
+
+<Layout
+  title={`Prix des Carburants en ${dept.name} (${dept.code}) — Comparateur LeCarbu.fr`}
+  description={`Trouvez la station essence la moins chère en ${dept.name} (${dept.code}). Comparez les tarifs du Gazole et SP95-E10 dans tout le département ${dept.name} (${dept.region}).`}
+>
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6" aria-label="Fil d'Ariane">
+      <a href="/" class="hover:text-blue-400 transition-colors">Accueil</a>
+      <span>/</span>
+      <span class="text-white font-semibold">{dept.name} ({dept.code})</span>
+    </nav>
+
+    <header class="mb-10 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-3 border border-zinc-800 bg-zinc-900 text-zinc-300">
+        <span>📍 Département {dept.code}</span>
+        <span>•</span>
+        <span>Région {dept.region}</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        Prix des Carburants en <span class="text-blue-400">{dept.name}</span> ({dept.code})
+      </h1>
+      <p class="mt-3 text-sm text-zinc-400 leading-relaxed">
+        Comparez les prix des stations-service dans toutes les communes du département {dept.name}. Données officielles actualisées en continu.
+      </p>
+    </header>
+
+    <AdSlot />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-black text-white mb-6">
+        Communes du Département {dept.name}
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {deptCities.map(c => (
+          <a
+            href={`/prix-carburant/${c.slug}/`}
+            class="p-3 bg-zinc-900 border border-zinc-800 hover:border-blue-500/60 rounded-xl transition-all group block shadow-sm"
+          >
+            <div class="text-sm font-bold text-white group-hover:text-blue-400 transition-colors truncate">
+              {c.name}
+            </div>
+            <div class="text-[11px] text-zinc-500 mt-1 truncate">
+              {c.stationCount > 0 ? `${c.stationCount} stations` : 'Voir les prix'}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

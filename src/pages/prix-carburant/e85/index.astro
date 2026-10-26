@@ -1,0 +1,49 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import citiesData from '../../../data/fr_cities.json';
+
+const topCities = citiesData.slice(0, 48);
+---
+
+<Layout
+  title="Prix de l'E85 Superéthanol en France — Carte des Stations Bioéthanol à Moins de 1€"
+  description="Trouvez les stations distribuant du Superéthanol E85 au meilleur prix en France. Localisez les pompes E85 à moins de 0.90€ le litre pour rouler économique et écologique."
+>
+  <div class="max-w-5xl mx-auto px-4 py-12">
+    <header class="mb-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/80 border border-emerald-800 text-emerald-300 mb-4">
+        <span>🌱 BIOÉTHANOL ÉCOLOGIQUE & ÉCONOMIQUE</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        Prix du <span class="text-emerald-400">Superéthanol E85</span> en Direct
+      </h1>
+      <p class="mt-4 text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+        Composé jusqu'à 85 % de bioéthanol d'origine végétale produit en France. Le carburant le plus économique à la pompe pour les véhicules équipés de boîtier Flexfuel.
+      </p>
+    </header>
+
+    <AdSlot />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-black text-white mb-6">
+        Stations E85 par Commune
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {topCities.map(c => (
+          <a
+            href={`/prix-carburant/${c.slug}/`}
+            class="p-3 bg-zinc-900 border border-zinc-800 hover:border-emerald-500/60 rounded-xl transition-all group block shadow-sm"
+          >
+            <div class="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors truncate">
+              {c.name}
+            </div>
+            <div class="text-[10px] text-zinc-500 mt-1 truncate">
+              {c.deptName}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

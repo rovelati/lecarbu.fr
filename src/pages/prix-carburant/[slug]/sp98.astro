@@ -1,0 +1,21 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import CityDetail from '../../../components/CityDetail.astro';
+import citiesData from '../../../data/fr_cities.json';
+
+export async function getStaticPaths() {
+  return citiesData.map(city => ({
+    params: { slug: city.slug },
+    props: { city },
+  }));
+}
+
+const { city } = Astro.props;
+---
+
+<Layout
+  title={`Prix SP98 à ${city.name} (${city.deptCode}) — Super Sans Plomb 98 au Meilleur Prix`}
+  description={`Trouvez le SP98 le moins cher à ${city.name} (${city.deptName}). Tarifs en direct pour le super sans plomb 98 chez TotalEnergies, Leclerc, BP, Esso et Carrefour.`}
+>
+  <CityDetail city={city} fuelFilter="sp98" />
+</Layout>

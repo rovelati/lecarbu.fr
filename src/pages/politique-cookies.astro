@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Politique des Cookies — LeCarbu.fr"
+  description="Gestion des cookies et du consentement sur le comparateur LeCarbu.fr."
+  noindex={true}
+>
+  <div class="max-w-3xl mx-auto px-4 py-12 prose prose-invert text-zinc-300 text-sm leading-relaxed">
+    <h1 class="text-3xl font-black text-white mb-6">Politique des Cookies</h1>
+    <p>Cette page vous explique comment LeCarbu.fr utilise les cookies et traceurs conformément à la directive ePrivacy et aux recommandations de la CNIL.</p>
+    
+    <h2 class="text-xl font-bold text-white mt-8 mb-3">1. Types de cookies utilisés</h2>
+    <ul class="list-disc pl-5 space-y-2">
+      <li><strong>Cookies techniques essentiels :</strong> nécessaires au bon fonctionnement du site (mémorisation de vos préférences de consentement).</li>
+      <li><strong>Cookies publicitaires (Google AdSense) :</strong> soumis à votre consentement préalable via le bandeau UniConsent.</li>
+    </ul>
+
+    <h2 class="text-xl font-bold text-white mt-8 mb-3">2. Modifier vos choix</h2>
+    <p>Vous pouvez à tout moment rouvrir la fenêtre de paramétrage en cliquant ci-dessous :</p>
+    <p>
+      <button
+        onclick="if(window.__cmp){window.__cmp('showConsentTool'); return false;}"
+        class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors cursor-pointer"
+      >
+        Ouvrir le panneau de consentement des cookies
+      </button>
+    </p>
+  </div>
+</Layout>

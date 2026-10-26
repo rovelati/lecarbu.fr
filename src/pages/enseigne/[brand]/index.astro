@@ -1,0 +1,67 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import AdSlot from '../../../components/AdSlot.astro';
+import brandsData from '../../../data/fr_brands.json';
+import citiesData from '../../../data/fr_cities.json';
+
+export async function getStaticPaths() {
+  return brandsData.map(brand => ({
+    params: { brand: brand.slug },
+    props: { brand },
+  }));
+}
+
+const { brand } = Astro.props;
+const topCities = citiesData.slice(0, 60);
+---
+
+<Layout
+  title={`Prix Carburant ${brand.name} en France — Comparateur des Stations ${brand.name}`}
+  description={`Trouvez la station ${brand.name} la moins chère près de chez vous en France. Comparez les prix en direct du Gazole, SP95-E10, SP98 et Superéthanol E85 dans tout le réseau ${brand.name}.`}
+>
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6" aria-label="Fil d'Ariane">
+      <a href="/" class="hover:text-blue-400 transition-colors">Accueil</a>
+      <span>/</span>
+      <span class="text-white font-semibold">Stations {brand.name}</span>
+    </nav>
+
+    <header class="mb-10 text-center max-w-3xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-3 border border-zinc-800 bg-zinc-900 text-zinc-300">
+        <span class="w-2.5 h-2.5 rounded-full" style={`background-color: ${brand.color}`}></span>
+        <span>{brand.category}</span>
+        <span>•</span>
+        <span>Réseau National France</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        Prix des Carburants chez <span class="text-blue-400">{brand.name}</span>
+      </h1>
+      <p class="mt-3 text-sm text-zinc-400 leading-relaxed">
+        Consultez les prix en temps réel du Gazole, SP95-E10, SP98 et E85 dans toutes les stations {brand.name} de France. Choisissez votre ville pour trouver la station la plus proche.
+      </p>
+    </header>
+
+    <AdSlot />
+
+    <section class="mt-12">
+      <h2 class="text-xl font-black text-white mb-6">
+        Stations {brand.name} dans les Principales Villes
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {topCities.map(c => (
+          <a
+            href={`/enseigne/${brand.slug}/${c.slug}/`}
+            class="p-3 bg-zinc-900 border border-zinc-800 hover:border-blue-500/60 rounded-xl transition-all group block shadow-sm"
+          >
+            <div class="text-xs font-bold text-white group-hover:text-blue-400 transition-colors truncate">
+              {brand.name} {c.name}
+            </div>
+            <div class="text-[10px] text-zinc-500 mt-1 truncate">
+              {c.deptName} ({c.deptCode})
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

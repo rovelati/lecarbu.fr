@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "leclerc",
+    "name": "E.Leclerc",
+    "color": "#005ea8",
+    "searchVolume": 165000,
+    "category": "Supermarché"
+  },
+  {
+    "slug": "totalenergies",
+    "name": "TotalEnergies",
+    "color": "#ed1c24",
+    "searchVolume": 135000,
+    "category": "Pétrolier"
+  },
+  {
+    "slug": "carrefour",
+    "name": "Carrefour",
+    "color": "#004e9a",
+    "searchVolume": 90000,
+    "category": "Supermarché"
+  },
+  {
+    "slug": "intermarche",
+    "name": "Intermarché",
+    "color": "#e2001a",
+    "searchVolume": 74000,
+    "category": "Supermarché"
+  },
+  {
+    "slug": "systeme-u",
+    "name": "Système U",
+    "color": "#0088ce",
+    "searchVolume": 49000,
+    "category": "Supermarché"
+  },
+  {
+    "slug": "auchan",
+    "name": "Auchan",
+    "color": "#d52b1e",
+    "searchVolume": 40500,
+    "category": "Supermarché"
+  },
+  {
+    "slug": "esso",
+    "name": "Esso",
+    "color": "#e01a22",
+    "searchVolume": 33000,
+    "category": "Pétrolier"
+  },
+  {
+    "slug": "bp",
+    "name": "BP",
+    "color": "#007a3d",
+    "searchVolume": 27000,
+    "category": "Pétrolier"
+  }
+]

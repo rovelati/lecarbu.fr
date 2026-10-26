@@ -1,0 +1,21 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import CityDetail from '../../../components/CityDetail.astro';
+import citiesData from '../../../data/fr_cities.json';
+
+export async function getStaticPaths() {
+  return citiesData.map(city => ({
+    params: { slug: city.slug },
+    props: { city },
+  }));
+}
+
+const { city } = Astro.props;
+---
+
+<Layout
+  title={`Prix Gazole à ${city.name} (${city.deptCode}) — Station Diesel la Moins Chère Aujourd'hui`}
+  description={`Trouvez le gazole le moins cher à ${city.name} (${city.deptName}). Comparez les prix du diesel en temps réel dans toutes les stations-service de la commune.`}
+>
+  <CityDetail city={city} fuelFilter="gazole" />
+</Layout>

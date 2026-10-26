@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import citiesData from '../../data/fr_cities.json';
+
+const topCities = citiesData.slice(0, 48);
+---
+
+<Layout
+  title="Carburant le Moins Cher en France — Comparateur & Carte des Stations Économiques"
+  description="Où trouver l'essence et le gazole les moins chers en France aujourd'hui ? Classement des stations discount, supermarchés à prix coûtant et astuces pour faire son plein au tarif le plus bas."
+>
+  <div class="max-w-5xl mx-auto px-4 py-12">
+    <header class="mb-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-950/80 border border-emerald-800 text-emerald-300 mb-4">
+        <span>💰 GUIDE ÉCONOMIES CARBURANT 2026</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+        Où Trouver le Carburant le <span class="text-emerald-400">Moins Cher</span> en France ?
+      </h1>
+      <p class="mt-4 text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+        Grâce aux données officielles du Ministère de l'Économie, repérez en direct les stations qui pratiquent les prix les plus bas à la pompe dans votre secteur.
+      </p>
+    </header>
+
+    <AdSlot />
+
+    <section class="prose prose-invert max-w-none text-zinc-300 space-y-6 text-sm leading-relaxed mb-12">
+      <h2 class="text-xl font-bold text-white">1. Grandes surfaces vs Réseaux autoroutiers : jusqu'à 30 centimes d'écart</h2>
+      <p>
+        Les distributeurs de la grande distribution (<strong class="text-white">E.Leclerc, Intermarché, Carrefour, Système U, Auchan</strong>) utilisent le carburant comme produit d'appel en appliquant des marges quasi nulles. À l'inverse, les stations d'autoroute ou de centre-ville affichent fréquemment des écarts allant de 15 à 30 centimes de plus par litre, soit une différence de plus de 15 € sur un plein de 50 litres.
+      </p>
+
+      <h2 class="text-xl font-bold text-white">2. L'E85 Superéthanol : le champion imbattable des économies</h2>
+      <p>
+        En France, le <strong class="text-emerald-400">Superéthanol E85</strong> bénéficie d'une fiscalité allégée (TICPE réduite) et s'affiche régulièrement autour de 0,85 € à 0,90 € le litre, soit près de la moitié du prix du SP95-E10 ou du Gazole. Même en tenant compte d'une surconsommation moyenne de 20 à 25 %, le coût au kilomètre reste imbattable pour les automobilistes équipés d'un boîtier de conversion homologué ou d'un véhicule Flexfuel natif.
+      </p>
+
+      <h2 class="text-xl font-bold text-white">3. Opérations « Carburant à Prix Coûtant »</h2>
+      <p>
+        Pendant les week-ends de grands départs et lors des périodes d'inflation, les grandes enseignes organisent régulièrement des opérations de carburant à prix coûtant. Ces réductions sont directement répercutées et consultables en direct sur notre comparateur.
+      </p>
+    </section>
+
+    <!-- Top Cities Links -->
+    <section class="mt-12">
+      <h2 class="text-xl font-black text-white mb-6">
+        Comparez les Prix dans Votre Ville
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {topCities.map(c => (
+          <a
+            href={`/prix-carburant/${c.slug}/`}
+            class="p-3 bg-zinc-900 border border-zinc-800 hover:border-emerald-500/60 rounded-xl transition-all group block shadow-sm"
+          >
+            <div class="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors truncate">
+              {c.name}
+            </div>
+            <div class="text-[10px] text-zinc-500 mt-1 truncate">
+              {c.deptName}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

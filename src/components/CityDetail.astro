@@ -1,0 +1,407 @@
+---
+/**
+ * CityDetail.astro — LeCarbu.fr
+ * Renders the city fuel comparison page with interactive Leaflet map,
+ * sorted price cards, cheapest station badges, and Schema.org GasStation data.
+ */
+import AdSlot from './AdSlot.astro';
+
+interface Props {
+  city: {
+    name: string;
+    slug: string;
+    deptCode: string;
+    deptName: string;
+    regionName: string;
+    lat: number;
+    lng: number;
+    stationCount: number;
+    minGazole?: number | null;
+    minE10?: number | null;
+    minSP98?: number | null;
+    minE85?: number | null;
+  };
+  fuelFilter?: 'gazole' | 'e10' | 'sp98' | 'e85' | null;
+}
+
+const { city, fuelFilter = null } = Astro.props;
+
+const fuelNames: Record<string, string> = {
+  gazole: 'Gazole (Diesel)',
+  e10: 'SP95-E10',
+  sp98: 'SP98 Super',
+  e85: 'E85 Bioéthanol',
+};
+
+const activeFuelName = fuelFilter ? fuelNames[fuelFilter] : null;
+
+const pageTitle = fuelFilter
+  ? `Prix ${activeFuelName} à ${city.name} (${city.deptCode}) — Comparateur LeCarbu.fr`
+  : `Prix des Carburants à ${city.name} (${city.deptCode}) — Comparateur Station la Moins Chère`;
+
+const pageDesc = fuelFilter
+  ? `Comparez les prix du ${activeFuelName} à ${city.name} (${city.deptName}). Trouvez la station-service la moins chère aujourd'hui grâce aux données officielles du Ministère.`
+  : `Tous les prix de l'essence et du gazole à ${city.name} (${city.deptName}). Comparez les stations E.Leclerc, TotalEnergies, Carrefour, Intermarché pour faire votre plein au meilleur prix.`;
+---
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <!-- Breadcrumbs -->
+  <nav class="flex items-center gap-2 text-xs text-zinc-400 mb-6 flex-wrap" aria-label="Fil d'Ariane">
+    <a href="/" class="hover:text-blue-400 transition-colors">Accueil</a>
+    <span>/</span>
+    <a href={`/departement/${city.deptCode.toLowerCase()}/`} class="hover:text-blue-400 transition-colors">
+      {city.deptName} ({city.deptCode})
+    </a>
+    <span>/</span>
+    <a href={`/prix-carburant/${city.slug}/`} class={`hover:text-blue-400 transition-colors ${!fuelFilter ? 'text-white font-semibold' : ''}`}>
+      {city.name}
+    </a>
+    {fuelFilter && (
+      <>
+        <span>/</span>
+        <span class="text-white font-semibold">{activeFuelName}</span>
+      </>
+    )}
+  </nav>
+
+  <!-- Title & Key Metrics Header -->
+  <header class="mb-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-950/80 text-blue-300 border border-blue-800/60 mb-3">
+          <span>📍 {city.deptName} ({city.deptCode})</span>
+          <span>•</span>
+          <span>{city.regionName}</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white">
+          {fuelFilter ? (
+            <>Prix du <span class="text-blue-400">{activeFuelName}</span> à {city.name}</>
+          ) : (
+            <>Prix des Carburants à <span class="text-blue-400">{city.name}</span></>
+          )}
+        </h1>
+        <p class="mt-2 text-sm text-zinc-400 max-w-3xl leading-relaxed">
+          {pageDesc}
+        </p>
+      </div>
+
+      <!-- Quick Summary Pills -->
+      <div class="flex items-center gap-3 flex-wrap">
+        {city.minGazole && (
+          <div class="px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-left">
+            <div class="text-[10px] uppercase font-bold text-zinc-400">Gazole dès</div>
+            <div class="text-lg font-black text-emerald-400">{city.minGazole.toFixed(3)} €</div>
+          </div>
+        )}
+        {city.minE10 && (
+          <div class="px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-left">
+            <div class="text-[10px] uppercase font-bold text-zinc-400">SP95-E10 dès</div>
+            <div class="text-lg font-black text-emerald-400">{city.minE10.toFixed(3)} €</div>
+          </div>
+        )}
+        {city.minSP98 && (
+          <div class="px-3 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-left">
+            <div class="text-[10px] uppercase font-bold text-zinc-400">SP98 dès</div>
+            <div class="text-lg font-black text-blue-400">{city.minSP98.toFixed(3)} €</div>
+          </div>
+        )}
+        {city.minE85 && (
+          <div class="px-3 py-2 rounded-xl bg-zinc-900 border border-emerald-900/60 text-left">
+            <div class="text-[10px] uppercase font-bold text-emerald-400">E85 dès</div>
+            <div class="text-lg font-black text-emerald-400">{city.minE85.toFixed(3)} €</div>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <!-- Fuel Filter Pills -->
+    <div class="flex items-center gap-2 mt-6 overflow-x-auto pb-2 scrollbar-none">
+      <a
+        href={`/prix-carburant/${city.slug}/`}
+        class={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+          !fuelFilter
+            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+            : 'bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-zinc-700'
+        }`}
+      >
+        Tous les carburants
+      </a>
+      <a
+        href={`/prix-carburant/${city.slug}/gazole/`}
+        class={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+          fuelFilter === 'gazole'
+            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+            : 'bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-zinc-700'
+        }`}
+      >
+        Gazole (Diesel)
+      </a>
+      <a
+        href={`/prix-carburant/${city.slug}/essence-e10/`}
+        class={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+          fuelFilter === 'e10'
+            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+            : 'bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-zinc-700'
+        }`}
+      >
+        SP95-E10
+      </a>
+      <a
+        href={`/prix-carburant/${city.slug}/sp98/`}
+        class={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+          fuelFilter === 'sp98'
+            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+            : 'bg-zinc-900 text-zinc-300 border border-zinc-800 hover:border-zinc-700'
+        }`}
+      >
+        SP98 Super
+      </a>
+    </div>
+  </header>
+
+  <!-- Ad Slot Top -->
+  <AdSlot />
+
+  <!-- Interactive Map Section -->
+  <section class="mb-10">
+    <div class="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden shadow-2xl">
+      <div class="p-4 border-b border-zinc-800/80 bg-zinc-900/90 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></span>
+          <span class="text-xs font-bold text-white uppercase tracking-wider">
+            Carte Interactive des Stations — {city.name}
+          </span>
+        </div>
+        <span class="text-xs text-zinc-400">Cliquez sur un repère pour voir les tarifs</span>
+      </div>
+      <div id="city-map" class="w-full h-80 sm:h-96 z-10" data-lat={city.lat} data-lng={city.lng} data-city={city.slug}></div>
+    </div>
+  </section>
+
+  <!-- Forecourts Cards Grid -->
+  <section class="mb-12">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-black text-white flex items-center gap-2">
+        <span>Stations-Service à {city.name} et aux Alentours</span>
+        <span id="stations-count-badge" class="px-2 py-0.5 rounded-full text-xs bg-zinc-800 text-zinc-300">
+          Recherche en cours...
+        </span>
+      </h2>
+      <div class="text-xs text-zinc-400">Classées du moins cher au plus cher</div>
+    </div>
+
+    <!-- Stations Container Hydrated via Client JS -->
+    <div id="stations-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="col-span-full p-8 text-center bg-zinc-900/40 rounded-2xl border border-zinc-800/60">
+        <div class="inline-block animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mb-3"></div>
+        <div class="text-sm font-semibold text-zinc-300">Chargement des tarifs en direct pour {city.name}...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ad Slot Middle -->
+  <AdSlot />
+
+  <!-- Local FAQ & SEO Content -->
+  <section class="mt-12 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 sm:p-8">
+    <h2 class="text-xl font-black text-white mb-6">
+      Foire Aux Questions — Carburant à {city.name}
+    </h2>
+    <div class="space-y-6 text-sm">
+      <div class="border-b border-zinc-800/80 pb-4">
+        <h3 class="font-bold text-white text-base mb-1">
+          Où trouver le carburant le moins cher à {city.name} ?
+        </h3>
+        <p class="text-zinc-400 leading-relaxed">
+          Les stations des grandes surfaces (E.Leclerc, Carrefour, Intermarché, Système U, Auchan) ainsi que les stations Total Access proposent généralement les prix les plus bas à {city.name}. Consultez notre tableau comparatif ci-dessus mis à jour en continu via le flux officiel de l'État pour repérer la station avec le badge vert « LE MOINS CHER ».
+        </p>
+      </div>
+
+      <div class="border-b border-zinc-800/80 pb-4">
+        <h3 class="font-bold text-white text-base mb-1">
+          Quelle est la différence entre le SP95-E10 et le SP98 à {city.name} ?
+        </h3>
+        <p class="text-zinc-400 leading-relaxed">
+          Le SP95-E10 contient jusqu'à 10 % de bioéthanol et convient à la quasi-totalité des véhicules essence immatriculés depuis 2000. Le SP98 (Super sans plomb 98) offre un indice d'octane plus élevé favorisant la protection et les performances des moteurs sportifs ou anciens, avec un surcoût moyen de 8 à 12 centimes par litre.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-white text-base mb-1">
+          À quelle fréquence les prix des carburants sont-ils actualisés ?
+        </h3>
+        <p class="text-zinc-400 leading-relaxed">
+          En France, la loi oblige tous les gérants de stations distribuant plus de 500 m³ de carburant par an à déclarer tout changement de tarif immédiatement sur la plateforme gouvernementale du Ministère de l'Économie. LeCarbu.fr synchronise ces données quotidiennement pour vous garantir une information fiable.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Client-side hydration script for Map and Stations List -->
+<script is:inline define:vars={{ cityLat: city.lat, cityLng: city.lng, citySlug: city.slug, targetFuel: fuelFilter }}>
+  (async function () {
+    const listContainer = document.getElementById('stations-list');
+    const countBadge = document.getElementById('stations-count-badge');
+    const mapEl = document.getElementById('city-map');
+
+    if (!listContainer || !mapEl) return;
+
+    try {
+      const res = await fetch('/fr_stations_index.json');
+      const allStations = await res.json();
+
+      function getDist(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      }
+
+      // Filter stations within 25km of city center
+      let nearby = allStations
+        .map(s => ({ ...s, dist: getDist(cityLat, cityLng, s.lt, s.lg) }))
+        .filter(s => s.dist <= 25);
+
+      if (nearby.length === 0) {
+        nearby = allStations
+          .map(s => ({ ...s, dist: getDist(cityLat, cityLng, s.lt, s.lg) }))
+          .sort((a,b) => a.dist - b.dist)
+          .slice(0, 10);
+      }
+
+      // Sort by targeted fuel lowest price, then by distance
+      nearby.sort((a, b) => {
+        let pA = 999;
+        let pB = 999;
+        if (targetFuel === 'gazole') {
+          pA = a.p.g || 999;
+          pB = b.p.g || 999;
+        } else if (targetFuel === 'e10') {
+          pA = a.p.e || 999;
+          pB = b.p.e || 999;
+        } else if (targetFuel === 'sp98') {
+          pA = a.p.s || 999;
+          pB = b.p.s || 999;
+        } else if (targetFuel === 'e85') {
+          pA = a.p.e85 || 999;
+          pB = b.p.e85 || 999;
+        } else {
+          // Default: compare minimum of available main fuels
+          pA = Math.min(a.p.g || 999, a.p.e || 999);
+          pB = Math.min(b.p.g || 999, b.p.e || 999);
+        }
+        if (pA !== pB) return pA - pB;
+        return a.dist - b.dist;
+      });
+
+      countBadge.textContent = `${nearby.length} station${nearby.length > 1 ? 's' : ''} à proximité`;
+
+      // Render Forecourt Cards
+      listContainer.innerHTML = nearby.map((s, idx) => {
+        const isCheapest = idx === 0;
+        const gPrice = s.p.g ? `${s.p.g.toFixed(3)} €` : '—';
+        const ePrice = s.p.e ? `${s.p.e.toFixed(3)} €` : '—';
+        const sPrice = s.p.s ? `${s.p.s.toFixed(3)} €` : '—';
+        const e85Price = s.p.e85 ? `${s.p.e85.toFixed(3)} €` : null;
+
+        return `
+          <article class="p-5 rounded-2xl border ${isCheapest ? 'border-emerald-500/60 bg-gradient-to-b from-emerald-950/20 to-zinc-900/90 shadow-lg shadow-emerald-500/10' : 'border-zinc-800 bg-zinc-900/70'} flex flex-col justify-between transition-all hover:border-zinc-700">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-zinc-800 text-zinc-300">
+                  ${s.b.toUpperCase()}
+                </span>
+                ${isCheapest ? '<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-wider bg-emerald-500 text-black shadow-sm">LE MOINS CHER</span>' : `<span class="text-xs text-zinc-400 font-medium">${s.dist.toFixed(1)} km</span>`}
+              </div>
+              <h3 class="text-base font-bold text-white leading-snug mb-1">${s.n}</h3>
+              <p class="text-xs text-zinc-400 mb-4">${s.a}, ${s.cp} ${s.v}</p>
+
+              <!-- Fuel Prices Grid -->
+              <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="p-2 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-400">Gazole</div>
+                  <div class="text-sm font-black ${s.p.g ? (isCheapest ? 'text-emerald-400' : 'text-zinc-100') : 'text-zinc-600'}">${gPrice}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-400">SP95-E10</div>
+                  <div class="text-sm font-black ${s.p.e ? (isCheapest ? 'text-emerald-400' : 'text-zinc-100') : 'text-zinc-600'}">${ePrice}</div>
+                </div>
+                <div class="p-2 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-center">
+                  <div class="text-[9px] uppercase font-bold text-zinc-400">SP98</div>
+                  <div class="text-sm font-black ${s.p.s ? 'text-blue-400' : 'text-zinc-600'}">${sPrice}</div>
+                </div>
+              </div>
+              ${e85Price ? `
+                <div class="mb-4 p-1.5 rounded-lg bg-emerald-950/40 border border-emerald-900/60 flex items-center justify-between text-xs px-3">
+                  <span class="text-emerald-300 font-semibold text-[11px]">Superéthanol E85</span>
+                  <span class="font-black text-emerald-400">${e85Price}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="pt-3 border-t border-zinc-800/80 flex items-center justify-between gap-3 text-xs">
+              <span class="text-[11px] text-zinc-400">
+                ${s.aut ? '⚡ Automate 24/24' : '🕒 Ouvert'}
+              </span>
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex items-center gap-1 font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                <span>Y aller</span>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      // Initialize Leaflet Map
+      if (typeof window.L !== 'undefined') {
+        const map = window.L.map('city-map').setView([cityLat, cityLng], 12);
+        window.L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+        }).addTo(map);
+
+        nearby.forEach((s, i) => {
+          let priceTag = s.p.g ? `${s.p.g.toFixed(2)}€` : (s.p.e ? `${s.p.e.toFixed(2)}€` : 'Carbu');
+          const isCheapest = i === 0;
+
+          const icon = window.L.divIcon({
+            className: 'custom-map-pin',
+            html: `<div class="custom-price-pin ${isCheapest ? 'cheapest' : ''}">${priceTag}</div>`,
+            iconSize: [45, 20],
+            iconAnchor: [22, 10]
+          });
+
+          window.L.marker([s.lt, s.lg], { icon })
+            .addTo(map)
+            .bindPopup(`
+              <div style="font-family: sans-serif; font-size: 12px; color: #18181b;">
+                <b style="font-size: 13px;">${s.n}</b><br/>
+                <span style="color: #71717a;">${s.a}, ${s.v}</span><br/>
+                <hr style="margin: 6px 0; border: none; border-top: 1px solid #e4e4e7;"/>
+                <b>Gazole:</b> ${s.p.g ? s.p.g.toFixed(3) + ' €' : 'N/A'}<br/>
+                <b>SP95-E10:</b> ${s.p.e ? s.p.e.toFixed(3) + ' €' : 'N/A'}<br/>
+                <b>SP98:</b> ${s.p.s ? s.p.s.toFixed(3) + ' €' : 'N/A'}<br/>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lt},${s.lg}" target="_blank" style="display: inline-block; margin-top: 6px; color: #2563eb; font-weight: bold; text-decoration: none;">
+                  Itinéraire GPS &rarr;
+                </a>
+              </div>
+            `);
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      listContainer.innerHTML = '<div class="col-span-full p-4 text-center text-red-400">Erreur de chargement des données. Veuillez réessayer.</div>';
+    }
+  })();
+</script>
